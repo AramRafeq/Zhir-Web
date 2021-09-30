@@ -1,12 +1,21 @@
 import React from 'react';
 import { withIronSession } from 'next-iron-session';
-import { Button } from 'antd';
+import { Button, Anchor } from 'antd';
 import authGuard from '../helpers/authGuard';
+import logout from '../helpers/logout';
 
-export default function Home() {
+export default function Home(props) {
+  const { user } = props;
   return (
     <h1>
-      <Button type="primary">Auth Granted 🎉</Button>
+      Welcome
+
+      {' '}
+      {user.name}
+      Auth Granted 🎉
+      <br />
+
+      <Button type="primary"><a href="/api/auth/logout">Logout</a></Button>
     </h1>
   );
 }

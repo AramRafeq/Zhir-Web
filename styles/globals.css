@@ -1,0 +1,17 @@
+* {
+    font-family: "vazir";
+}
+.custom-box-shadow{
+    box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%);
+}
+.is-size-6 {
+    font-size: 1rem !important;
+}
+.is-ltr{
+    text-align: left;
+    direction: ltr !important;
+}
+.is-icon-prefix{
+    margin-left: 0 !important;
+    margin-right: 10px !important;
+}
