@@ -1,6 +1,10 @@
 * {
     font-family: "vazir";
 }
+div[role="alert"],.ant-form-item-extra{
+    font-size: 12px !important;
+}
+
 .custom-box-shadow{
     box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%);
 }
@@ -14,4 +18,8 @@
 .is-icon-prefix{
     margin-left: 0 !important;
     margin-right: 10px !important;
+}
+
+.is-success-text {
+    color: #48c774 !important;
 }

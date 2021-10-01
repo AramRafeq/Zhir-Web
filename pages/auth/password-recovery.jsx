@@ -1,6 +1,6 @@
 import React from 'react';
-import Router from 'next/router';
 import { withIronSession } from 'next-iron-session';
+
 import {
   Row, Col, Form, Card,
   Input,
@@ -8,8 +8,10 @@ import {
   Divider,
   Alert,
 } from 'antd';
-import { ContactsOutlined, LockOutlined } from '@ant-design/icons';
+import { ContactsOutlined } from '@ant-design/icons';
 import superagent from 'superagent';
+import PasswordRecoverySuccess from '../../components/auth/PasswordRecoverySuccess';
+import PasswordRecoveryForm from '../../components/auth/PasswordRecoveryForm';
 
 export default class Login extends React.Component {
   constructor() {
@@ -18,21 +20,21 @@ export default class Login extends React.Component {
       windowHeight: 0,
       loading: false,
       errMsg: null,
+      success: false,
     });
     this.state = this.initialState();
     this.onFinish = (values) => {
       this.setState({ loading: true });
-      superagent.post('/api/auth/login')
+      superagent.post('/api/auth/request-password-recovery')
         .send({
           email: values.email,
-          password: values.password,
         }).end((err) => {
           this.setState({ loading: false });
 
           if (!err) {
-            Router.push('/private');
+            this.setState({ success: true });
           } else {
-            this.setState({ errMsg: err.response.body.msg });
+            this.setState({ errMsg: err.response.body.errors[0].msg });
           }
         });
     };
@@ -43,7 +45,10 @@ export default class Login extends React.Component {
   }
 
   render() {
-    const { windowHeight, loading, errMsg } = this.state;
+    const {
+      windowHeight, loading, errMsg, success,
+    } = this.state;
+    const { token } = this.props;
     return (
       <Row justify="center" align="middle" style={{ height: `${windowHeight}px` }}>
         <Col span={6}>
@@ -58,41 +63,31 @@ export default class Login extends React.Component {
             <Row style={{ marginTop: '2rem' }}>
               <Col span={24}>
                 <p className="is-size-6">
-                  هەژمارت نیە ؟
-                  <a href="/auth/register"> هەژماری نوێ دروست بکە ! </a>
+                  لەکاتی لەبیرچوونەوە دەتوانیت تێپەڕەوشەی نوێ لە رێگای ئیمێڵەوە بەدەست بهێنیت
+                  <a href="/auth/login"> چوونەژوورەوە! </a>
                 </p>
                 <Divider />
               </Col>
-              <Col span="24">
+              <Col span={24} style={{ display: (success || token) ? 'none' : '' }}>
                 <Form onFinish={this.onFinish} layout="vertical">
                   <Row gutter={[5, 10]}>
                     <Col span={24}>
                       <Form.Item
+                        extra="* دەبێت پۆستی ئەلیکترۆنی پێشوتر تۆمارکرابێت"
                         name="email"
                         label="پۆستی ئەلیکترۆنی/ئیمەیڵ"
                         rules={[
-                          { required: true, message: 'پۆستی ئەلیکترۆنی/ئیمەیڵ پێویستە' },
-                          { type: 'email', message: 'پۆستی ئەلیکترۆنی/ئیمەیڵ دروست بنووسە' },
+                          { required: true, message: '* پۆستی ئەلیکترۆنی/ئیمەیڵ پێویستە ' },
+                          { type: 'email', message: '* پۆستی ئەلیکترۆنی/ئیمەیڵ دروست بنووسە' },
                         ]}
                       >
                         <Input size="large" autoComplete="off" className="is-ltr" prefix={<ContactsOutlined className="is-icon-prefix" />} />
                       </Form.Item>
                     </Col>
-                    <Col span={24}>
-                      <Form.Item
-                        name="password"
-                        label="تێپەڕەوشە"
-                        rules={[
-                          { required: true, message: 'تێپەڕەوشە پێویستە' },
-                        ]}
-                      >
-                        <Input.Password size="large" className="is-ltr" prefix={<LockOutlined className="is-icon-prefix" />} />
-                      </Form.Item>
-                    </Col>
 
                     <Col span={24}>
                       <Form.Item name="submit">
-                        <Button loading={loading} size="large" htmlType="submit" block type="primary">چوونەژوورەوە</Button>
+                        <Button loading={loading} size="large" htmlType="submit" block type="primary">تێپەڕەوشە بنێرە</Button>
                       </Form.Item>
                     </Col>
                     {errMsg ? (
@@ -103,11 +98,18 @@ export default class Login extends React.Component {
                   </Row>
                 </Form>
               </Col>
+              <Col span={24} style={{ display: (!success && token !== '') ? 'none' : '' }}>
+                <PasswordRecoverySuccess />
+              </Col>
+              <Col span={24} style={{ display: !token ? 'none' : '' }}>
+                <PasswordRecoveryForm token={token} />
+              </Col>
+
               <Col span={24}>
                 <Divider />
                 <p className="is-size-6">
-                  چوونەژوورەوە بۆ ناسینەوەی وێنە
-                  <a href="/auth/password-recovery"> تێپەڕەوشەم بیرچۆتەوە ؟ </a>
+                  هەژمارم نیە
+                  <a href="/auth/register"> فۆرمی خۆتۆمارکردن  </a>
                 </p>
               </Col>
             </Row>
@@ -118,16 +120,17 @@ export default class Login extends React.Component {
   }
 }
 
-export const getServerSideProps = withIronSession(async ({ req, res }) => {
+export const getServerSideProps = withIronSession(async ({ query, req, res }) => {
   const user = req.session.get('user');
   if (user) {
     res.writeHead(302, { Location: '/' });
     res.end();
     return { props: {} };
   }
-
   return {
-    props: { },
+    props: {
+      ...query,
+    },
   };
 },
 {

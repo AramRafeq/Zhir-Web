@@ -1,8 +1,7 @@
 import React from 'react';
 import { withIronSession } from 'next-iron-session';
-import { Button, Anchor } from 'antd';
+import { Button } from 'antd';
 import authGuard from '../helpers/authGuard';
-import logout from '../helpers/logout';
 
 export default function Home(props) {
   const { user } = props;
