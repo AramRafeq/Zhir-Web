@@ -1,3 +1,8 @@
+
+:root {
+    --primary-color: #892CDC;
+}
+
 * {
     font-family: "vazir";
 }
@@ -22,4 +27,8 @@ div[role="alert"],.ant-form-item-extra{
 
 .is-success-text {
     color: #48c774 !important;
+}
+
+.is-primary-bg{
+    background-color: var(--primary-color) !important;
 }

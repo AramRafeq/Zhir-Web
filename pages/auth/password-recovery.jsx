@@ -54,9 +54,9 @@ export default class Login extends React.Component {
         <Col span={6}>
           <Card className="custom-box-shadow" bordered={false} style={{ padding: '0.75rem' }}>
             <Row justify="center">
-              <Col style={{ marginTop: '-5rem' }} span={6}>
-                <Card className="custom-box-shadow" bordered={false}>
-                  <img src="/assets/black-logo.png" alt="logo" style={{ width: '100%' }} />
+              <Col style={{ marginTop: '-5rem' }} span={7}>
+                <Card className="custom-box-shadow is-primary-bg" bordered={false}>
+                  <img src="/assets/white-logo.png" alt="logo" style={{ width: '100%' }} />
                 </Card>
               </Col>
             </Row>
@@ -70,7 +70,7 @@ export default class Login extends React.Component {
               </Col>
               <Col span={24} style={{ display: (success || token) ? 'none' : '' }}>
                 <Form onFinish={this.onFinish} layout="vertical">
-                  <Row gutter={[5, 10]}>
+                  <Row gutter={[5, 5]}>
                     <Col span={24}>
                       <Form.Item
                         extra="* دەبێت پۆستی ئەلیکترۆنی پێشوتر تۆمارکرابێت"

@@ -44,25 +44,35 @@ export default class Login extends React.Component {
 
   render() {
     const { windowHeight, loading, errMsg } = this.state;
+    // eslint-disable-next-line react/destructuring-assignment
+    const accountStatus = this.props['account-status'];
     return (
       <Row justify="center" align="middle" style={{ height: `${windowHeight}px` }}>
         <Col span={6}>
           <Card className="custom-box-shadow" bordered={false} style={{ padding: '0.75rem' }}>
             <Row justify="center">
-              <Col style={{ marginTop: '-5rem' }} span={6}>
-                <Card className="custom-box-shadow" bordered={false}>
-                  <img src="/assets/black-logo.png" alt="logo" style={{ width: '100%' }} />
+              <Col style={{ marginTop: '-5rem' }} span={7}>
+                <Card className="custom-box-shadow is-primary-bg" bordered={false}>
+                  <img src="/assets/white-logo.png" alt="logo" style={{ width: '100%' }} />
                 </Card>
               </Col>
             </Row>
             <Row style={{ marginTop: '2rem' }}>
-              <Col span={24}>
-                <p className="is-size-6">
-                  هەژمارت نیە ؟
-                  <a href="/auth/register"> هەژماری نوێ دروست بکە ! </a>
-                </p>
-                <Divider />
-              </Col>
+              {accountStatus ? (
+                <Col span={24}>
+                  <Alert type={accountStatus === 'activated' ? 'success' : 'warning'} message={accountStatus === 'activated' ? 'هەژمارەکەت کاراکرا دەتوانیت بچیتە ژوورەوە' : 'ئەم هەژمارە پێشووتر کارا کراوە'} />
+                  <Divider />
+                </Col>
+              ) : (
+                <Col span={24}>
+                  <p className="is-size-6">
+                    هەژمارت نیە ؟
+                    <a href="/auth/register"> هەژماری نوێ دروست بکە ! </a>
+                  </p>
+                  <Divider />
+                </Col>
+              )}
+
               <Col span="24">
                 <Form onFinish={this.onFinish} layout="vertical">
                   <Row gutter={[5, 10]}>
@@ -118,7 +128,7 @@ export default class Login extends React.Component {
   }
 }
 
-export const getServerSideProps = withIronSession(async ({ req, res }) => {
+export const getServerSideProps = withIronSession(async ({ query, req, res }) => {
   const user = req.session.get('user');
   if (user) {
     res.writeHead(302, { Location: '/' });
@@ -127,7 +137,7 @@ export const getServerSideProps = withIronSession(async ({ req, res }) => {
   }
 
   return {
-    props: { },
+    props: { ...query },
   };
 },
 {

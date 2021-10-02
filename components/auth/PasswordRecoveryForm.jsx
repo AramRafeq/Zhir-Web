@@ -45,7 +45,7 @@ class PasswordRecoveryForm extends React.Component {
     }
     return (
       <Form onFinish={this.onFinish} layout="vertical">
-        <Row gutter={[5, 10]}>
+        <Row gutter={[5, 5]}>
           <Col span={24}>
             <Form.Item
               name="password"

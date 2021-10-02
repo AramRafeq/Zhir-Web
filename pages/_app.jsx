@@ -2,7 +2,7 @@
 import React from 'react';
 import { ConfigProvider } from 'antd';
 import '../styles/vazir.css';
-import '../styles/globals.css';
+import '../styles/global.css';
 
 function MyApp({ Component, pageProps }) {
   return (
