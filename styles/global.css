@@ -33,8 +33,9 @@ div[role="alert"],.ant-form-item-extra{
     background-color: var(--primary-color) !important;
 }
 
-.dashboard-logo{
-    float: right;
-    width: 30px;
-    margin: 15px;
+.sidebar-logo-container{
+    /* padding: 50px; */
+}
+.logo{
+    width: 100%;
 }
