@@ -30,7 +30,7 @@ export default class Login extends React.Component {
           this.setState({ loading: false });
 
           if (!err) {
-            Router.push('/private');
+            Router.push('/app');
           } else {
             this.setState({ errMsg: err.response.body.msg });
           }

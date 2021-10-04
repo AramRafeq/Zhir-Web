@@ -27,7 +27,7 @@ class PasswordRecoveryForm extends React.Component {
 
           if (!err) {
             // this.setState({ success: true });
-            Router.push('/private');
+            Router.push('/app');
           } else if (err.response.status === 400) {
             this.setState({ errMsg: err.response.body.msg });
           } else {

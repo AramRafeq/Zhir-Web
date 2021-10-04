@@ -32,3 +32,9 @@ div[role="alert"],.ant-form-item-extra{
 .is-primary-bg{
     background-color: var(--primary-color) !important;
 }
+
+.dashboard-logo{
+    float: right;
+    width: 30px;
+    margin: 15px;
+}
