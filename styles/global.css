@@ -2,7 +2,9 @@
 :root {
     --primary-color: #892CDC;
 }
-
+body{
+    overflow-x: hidden;
+}
 * {
     font-family: "vazir";
 }
@@ -33,9 +35,17 @@ div[role="alert"],.ant-form-item-extra{
     background-color: var(--primary-color) !important;
 }
 
-.sidebar-logo-container{
-    /* padding: 50px; */
-}
 .logo{
     width: 100%;
+}
+.dashboard-menu-item{
+    height: 3.75rem !important;
+    padding: 0.625rem !important;
+    padding-right: 2.813rem !important;
+}
+
+.custom-icon{
+    color: inherit !important;
+    font-size: 1rem !important;
+    margin-bottom: -4px !important;
 }

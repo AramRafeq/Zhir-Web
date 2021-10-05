@@ -11,11 +11,14 @@
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "antd": "^4.16.13",
+    "classnames": "^2.3.1",
+    "lodash": "^4.17.21",
     "next": "11.1.2",
     "next-iron-session": "^4.2.0",
     "next-plugin-antd-less": "^1.4.3",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-icons": "^4.3.1",
     "superagent": "^6.1.0"
   },
   "devDependencies": {
