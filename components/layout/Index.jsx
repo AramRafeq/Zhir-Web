@@ -25,24 +25,19 @@ class Index extends React.Component {
       this.setState({ windowHeight: window.innerHeight, windowWidth: window.innerWidth });
       const { windowWidth } = this.state;
       if (windowWidth < 992) {
-        localStorage.setItem('sidebar-collapsed', true);
         this.setState({ sideBarCollapsed: true });
       } else {
-        localStorage.setItem('sidebar-collapsed', false);
         this.setState({ sideBarCollapsed: false });
       }
     }, 300);
     this.onCollapse = (collapsed) => {
-      localStorage.setItem('sidebar-collapsed', collapsed);
       this.setState({ sideBarCollapsed: collapsed });
     };
   }
 
   componentDidMount() {
-    const sideBarCollapsed = localStorage.getItem('sidebar-collapsed');
     this.setState({
       windowHeight: window.innerHeight,
-      sideBarCollapsed,
     });
     window.addEventListener('resize', this.updateDimensions);
   }
@@ -52,7 +47,7 @@ class Index extends React.Component {
   }
 
   render() {
-    const { children, cardTitle } = this.props;
+    const { children, cardTitle, url } = this.props;
     const { windowHeight, sideBarCollapsed } = this.state;
     return (
       <Layout style={{ height: windowHeight }}>
@@ -89,12 +84,22 @@ class Index extends React.Component {
               </Col>
             </Row>
           </div>
-          <Menu theme="light" mode="vertical" defaultSelectedKeys={['ocr']}>
-            <Menu.Item icon={<MdDocumentScanner className="custom-icon" />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="ocr">ناسینەوەی وێنە</Menu.Item>
-            <Menu.Item icon={<GiSoundWaves className="custom-icon" />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="tts">نووسین بۆ دەنگ</Menu.Item>
+          <Menu theme="light" mode="vertical" defaultSelectedKeys={[url]}>
+            <Menu.Item icon={<MdDocumentScanner className="custom-icon" />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="/app/ocr">
+              <a href="/app/ocr">ناسینەوەی وێنە</a>
+            </Menu.Item>
+            <Menu.Item icon={<GiSoundWaves className="custom-icon" />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="/app/tts">
+              <a href="/app/tts"> نووسین بۆ دەنگ</a>
+
+            </Menu.Item>
             <Menu.Item icon={<AudioOutlined />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="stt"> دەنگ بۆ نووسین</Menu.Item>
-            <Menu.Item icon={<RiUserSettingsLine className="custom-icon" />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="setting">رێکخستنەکان</Menu.Item>
-            <Menu.Item icon={<MdOutlineLogout className="custom-icon" />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="logout"><a href="/api/auth/logout">چووەندەرەوە</a></Menu.Item>
+            <Menu.Item icon={<RiUserSettingsLine className="custom-icon" />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="/app/profile">
+
+              <a href="/app/profile">پرۆفایلەکەم</a>
+            </Menu.Item>
+            <Menu.Item style={{ color: 'red' }} icon={<MdOutlineLogout className="custom-icon" />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="/app/logout">
+              <a href="/api/auth/logout" style={{ color: 'red' }}>چووەندەرەوە</a>
+            </Menu.Item>
           </Menu>
           {/* <Row>
             <Col span={24}>

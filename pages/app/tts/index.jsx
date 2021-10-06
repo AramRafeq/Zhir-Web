@@ -1,11 +1,10 @@
 import React from 'react';
 import { withIronSession } from 'next-iron-session';
-import { Button } from 'antd';
 import authGuard from '../../../helpers/authGuard';
 import Layout from '../../../components/layout/Index';
-import Login from '../../../components/auth/PasswordRecoveryForm';
+import CommingSoon from '../../../components/commingsoon/index';
 
-class OCRIndex extends React.Component {
+class TTSIndex extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -17,21 +16,15 @@ class OCRIndex extends React.Component {
     return (
       <Layout
         url={url}
-        cardTitle={(
-          <Button.Group style={{ width: '100%' }}>
-            <Button block>سڵاو جیهان</Button>
-            <Button block>زانیاریەکانم</Button>
-            <Button block>کڕین</Button>
-          </Button.Group>
-)}
+        cardTitle="نووسین بۆ دەنگ"
       >
-        <Login token="akjdwa" />
+        <CommingSoon />
       </Layout>
     );
   }
 }
 
-export default OCRIndex;
+export default TTSIndex;
 export const getServerSideProps = withIronSession(authGuard,
   {
     cookieName: process.env.COOKIE_NAME,

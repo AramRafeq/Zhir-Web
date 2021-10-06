@@ -8,6 +8,8 @@ import {
   Divider,
   Alert,
 } from 'antd';
+import Link from 'next/link';
+
 import { ContactsOutlined, LockOutlined } from '@ant-design/icons';
 import superagent from 'superagent';
 
@@ -67,7 +69,9 @@ export default class Login extends React.Component {
                 <Col span={24}>
                   <p className="is-size-6">
                     هەژمارت نیە ؟
-                    <a href="/auth/register"> هەژماری نوێ دروست بکە ! </a>
+                    <Link href="/auth/register">
+                      <a href="#_" style={{ color: 'red' }}>هەژماری نوێ دروست بکە !</a>
+                    </Link>
                   </p>
                   <Divider />
                 </Col>
@@ -117,7 +121,9 @@ export default class Login extends React.Component {
                 <Divider />
                 <p className="is-size-6">
                   چوونەژوورەوە بۆ ناسینەوەی وێنە
-                  <a href="/auth/password-recovery"> تێپەڕەوشەم بیرچۆتەوە ؟ </a>
+                  <Link href="/auth/password-recovery">
+                    <a href="#_" style={{ color: 'red' }}>تێپەڕەوشەم بیرچۆتەوە ؟ </a>
+                  </Link>
                 </p>
               </Col>
             </Row>
