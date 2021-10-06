@@ -1,5 +1,4 @@
 import React from 'react';
-import { withIronSession } from 'next-iron-session';
 import {
   Row, Col, Form, Card,
   Input,
@@ -13,9 +12,8 @@ import {
   ContactsOutlined, LockOutlined, UserOutlined, TeamOutlined,
 } from '@ant-design/icons';
 import superagent from 'superagent';
-import RegestrationSuccess from '../../components/auth/RegestrationSuccess';
 
-export default class Register extends React.Component {
+export default class Profile extends React.Component {
   constructor() {
     super();
     this.initialState = () => ({
@@ -57,15 +55,8 @@ export default class Register extends React.Component {
     } = this.state;
     return (
       <Row justify="center" align="middle" style={{ height: `${windowHeight}px` }}>
-        <Col span={10}>
-          <Card className="custom-box-shadow" bordered={false} style={{ padding: '0.75rem' }}>
-            <Row justify="center">
-              <Col style={{ marginTop: '-5rem' }} span={4}>
-                <Card className="custom-box-shadow is-primary-bg" bordered={false}>
-                  <img src="/assets/white-logo.png" alt="logo" style={{ width: '100%' }} />
-                </Card>
-              </Col>
-            </Row>
+        <Col span={24}>
+          <Card bordered style={{ }}>
             <Row style={{ marginTop: '2rem' }}>
               <Col span={24}>
                 <p className="is-size-6">
@@ -87,7 +78,7 @@ export default class Register extends React.Component {
                           { required: true, message: 'ناوی بەکارهێنەر پێویستە هەبێت' },
                         ]}
                       >
-                        <Input size="large" autoComplete="off" prefix={<UserOutlined className="is-icon-prefix" />} />
+                        <Input autoComplete="off" prefix={<UserOutlined className="is-icon-prefix" />} />
                       </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -96,7 +87,7 @@ export default class Register extends React.Component {
                         label="شوێنی کار/کۆمپانیا"
                         extra="دەکرێت بە بەتاڵی بەجێی بهێڵیت / ئارەزوومەندانەیە "
                       >
-                        <Input size="large" autoComplete="off" prefix={<TeamOutlined className="is-icon-prefix" />} />
+                        <Input autoComplete="off" prefix={<TeamOutlined className="is-icon-prefix" />} />
                       </Form.Item>
                     </Col>
                     <Col span={24}>
@@ -108,7 +99,7 @@ export default class Register extends React.Component {
                           { type: 'email', message: 'پۆستی ئەلیکترۆنی/ئیمەیڵ دروست بنووسە' },
                         ]}
                       >
-                        <Input size="large" autoComplete="off" className="is-ltr" prefix={<ContactsOutlined className="is-icon-prefix" />} />
+                        <Input autoComplete="off" className="is-ltr" prefix={<ContactsOutlined className="is-icon-prefix" />} />
                       </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -120,7 +111,7 @@ export default class Register extends React.Component {
                         ]}
                         hasFeedback
                       >
-                        <Input.Password autoComplete="off" size="large" className="is-ltr" prefix={<LockOutlined className="is-icon-prefix" />} />
+                        <Input.Password autoComplete="off" className="is-ltr" prefix={<LockOutlined className="is-icon-prefix" />} />
 
                       </Form.Item>
                     </Col>
@@ -146,13 +137,13 @@ export default class Register extends React.Component {
                           }),
                         ]}
                       >
-                        <Input.Password autoComplete="off" size="large" className="is-ltr" prefix={<LockOutlined className="is-icon-prefix" />} />
+                        <Input.Password autoComplete="off" className="is-ltr" prefix={<LockOutlined className="is-icon-prefix" />} />
 
                       </Form.Item>
                     </Col>
                     <Col span={24}>
                       <Form.Item name="submit">
-                        <Button loading={loading} size="large" htmlType="submit" block type="primary">دروستکردنی هەژمار</Button>
+                        <Button loading={loading} htmlType="submit" block type="primary">دروستکردنی هەژمار</Button>
                       </Form.Item>
                     </Col>
                     {errMsg ? (
@@ -162,9 +153,6 @@ export default class Register extends React.Component {
                     ) : null}
                   </Row>
                 </Form>
-              </Col>
-              <Col span={24} style={{ display: (!success) ? 'none' : '' }}>
-                <RegestrationSuccess />
               </Col>
 
               <Col span={24}>
@@ -183,23 +171,3 @@ export default class Register extends React.Component {
     );
   }
 }
-
-export const getServerSideProps = withIronSession(async ({ req, res }) => {
-  const user = req.session.get('user');
-  if (user) {
-    res.writeHead(302, { Location: '/' });
-    res.end();
-    return { props: {} };
-  }
-
-  return {
-    props: { },
-  };
-},
-{
-  cookieName: process.env.COOKIE_NAME,
-  cookieOptions: {
-    secure: process.env.NODE_ENV === 'production',
-  },
-  password: process.env.SESSION_SECRET,
-});

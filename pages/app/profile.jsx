@@ -4,7 +4,7 @@ import { AiFillApi, AiFillProfile } from 'react-icons/ai';
 import { Tabs } from 'antd';
 import authGuard from '../../helpers/authGuard';
 import Layout from '../../components/layout/Index';
-import PasswordRecoveryForm from '../../components/auth/PasswordRecoveryForm';
+import ProfileForm from '../../components/setting/Profile';
 import PasswordRecoverySuccess from '../../components/auth/PasswordRecoverySuccess';
 
 class Profile extends React.Component {
@@ -36,7 +36,7 @@ class Profile extends React.Component {
             )}
             key="profile"
           >
-            <PasswordRecoveryForm token="dwa" />
+            <ProfileForm token="dwa" />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={(
