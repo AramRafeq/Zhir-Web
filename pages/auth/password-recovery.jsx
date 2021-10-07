@@ -85,7 +85,7 @@ export default class Login extends React.Component {
                           { type: 'email', message: '* پۆستی ئەلیکترۆنی/ئیمەیڵ دروست بنووسە' },
                         ]}
                       >
-                        <Input size="large" autoComplete="off" className="is-ltr" prefix={<ContactsOutlined className="is-icon-prefix" />} />
+                        <Input size="large" autoComplete="new" className="is-ltr" prefix={<ContactsOutlined className="is-icon-prefix" />} />
                       </Form.Item>
                     </Col>
 

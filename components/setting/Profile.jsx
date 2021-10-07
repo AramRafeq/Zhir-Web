@@ -3,13 +3,12 @@ import {
   Row, Col, Form, Card,
   Input,
   Button,
-  Divider,
   Alert,
+  notification,
 } from 'antd';
-import Link from 'next/link';
 
 import {
-  ContactsOutlined, LockOutlined, UserOutlined, TeamOutlined,
+  ContactsOutlined, LockOutlined, UserOutlined, TeamOutlined, MobileOutlined,
 } from '@ant-design/icons';
 import superagent from 'superagent';
 
@@ -24,13 +23,21 @@ export default class Profile extends React.Component {
     });
     this.state = this.initialState();
     this.onFinish = (values) => {
+      const reqBody = {
+        ...values,
+        password: values.password !== '' ? values.password : undefined,
+        password_retype: values.password !== '' ? values.password : undefined,
+      };
       this.setState({ loading: true });
-      superagent.post('/api/auth/register')
-        .send(values).end((err) => {
+      superagent.put('/api/user/profile')
+        .send(reqBody).end((err) => {
           this.setState({ loading: false });
-
           if (!err) {
-            this.setState({ success: true });
+            notification.success({
+              message: 'تەواوکرا',
+              description:
+                'زانیاریەکانت نوێکرایەوە',
+            });
           } else if (err.status === 422) {
             const msg = (
               <ul>
@@ -40,6 +47,8 @@ export default class Profile extends React.Component {
               </ul>
             );
             this.setState({ errMsg: msg });
+          } else {
+            this.setState({ errMsg: 'بوورە ‌هەڵەیەک روویدا لەکاتی نوێکردنەوە' });
           }
         });
     };
@@ -51,24 +60,24 @@ export default class Profile extends React.Component {
 
   render() {
     const {
-      windowHeight, loading, errMsg, success,
+      windowHeight, loading, errMsg,
     } = this.state;
+    const { user } = this.props;
+    const initialFormValues = {
+      name: user.name,
+      company_name: user.company_name,
+      phone_no: user.phone_no,
+      email: user.email,
+      password: '',
+      password_retype: '',
+    };
     return (
-      <Row justify="center" align="middle" style={{ height: `${windowHeight}px` }}>
+      <Row justify="center" style={{ height: `${windowHeight}px` }}>
         <Col span={24}>
-          <Card bordered style={{ }}>
+          <Card bordered={false}>
             <Row style={{ marginTop: '2rem' }}>
               <Col span={24}>
-                <p className="is-size-6">
-                  فۆرمی دروستکردنی هەژمارێکی نوێ /
-                  <Link href="/auth/login">
-                    <a href="#_" style={{ color: 'red' }}> چوونەژوورەوە! </a>
-                  </Link>
-                </p>
-                <Divider />
-              </Col>
-              <Col span={24} style={{ display: (success) ? 'none' : '' }}>
-                <Form onFinish={this.onFinish} layout="vertical">
+                <Form initialValues={initialFormValues} onFinish={this.onFinish} layout="vertical">
                   <Row gutter={[10, 5]}>
                     <Col span={12}>
                       <Form.Item
@@ -78,7 +87,7 @@ export default class Profile extends React.Component {
                           { required: true, message: 'ناوی بەکارهێنەر پێویستە هەبێت' },
                         ]}
                       >
-                        <Input autoComplete="off" prefix={<UserOutlined className="is-icon-prefix" />} />
+                        <Input size="large" autoComplete="new" prefix={<UserOutlined className="is-icon-prefix" />} />
                       </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -87,10 +96,10 @@ export default class Profile extends React.Component {
                         label="شوێنی کار/کۆمپانیا"
                         extra="دەکرێت بە بەتاڵی بەجێی بهێڵیت / ئارەزوومەندانەیە "
                       >
-                        <Input autoComplete="off" prefix={<TeamOutlined className="is-icon-prefix" />} />
+                        <Input size="large" autoComplete="new" prefix={<TeamOutlined className="is-icon-prefix" />} />
                       </Form.Item>
                     </Col>
-                    <Col span={24}>
+                    <Col span={12}>
                       <Form.Item
                         name="email"
                         label="پۆستی ئەلیکترۆنی/ئیمەیڵ"
@@ -99,19 +108,28 @@ export default class Profile extends React.Component {
                           { type: 'email', message: 'پۆستی ئەلیکترۆنی/ئیمەیڵ دروست بنووسە' },
                         ]}
                       >
-                        <Input autoComplete="off" className="is-ltr" prefix={<ContactsOutlined className="is-icon-prefix" />} />
+                        <Input size="large" autoComplete="new" className="is-ltr" prefix={<ContactsOutlined className="is-icon-prefix" />} />
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item
+                        name="phone_no"
+                        label="ژمارەی مۆبایل"
+                        rules={[
+                          { required: true, message: 'ژمارەی مۆبایل پێویستە' },
+                        ]}
+                      >
+                        <Input size="large" autoComplete="new" className="is-ltr" prefix={<MobileOutlined className="is-icon-prefix" />} />
                       </Form.Item>
                     </Col>
                     <Col span={12}>
                       <Form.Item
                         name="password"
+                        extra="تێبینی: ئەم بەشە پێویست نیە بنوسرێت تەنها لەکاتی گۆڕینی تێپەڕەوشە"
                         label="تێپەڕەوشە"
-                        rules={[
-                          { required: true, message: 'تێپەڕەوشە پێویستە' },
-                        ]}
                         hasFeedback
                       >
-                        <Input.Password autoComplete="off" className="is-ltr" prefix={<LockOutlined className="is-icon-prefix" />} />
+                        <Input.Password size="large" autoComplete="new-password" className="is-ltr" prefix={<LockOutlined className="is-icon-prefix" />} />
 
                       </Form.Item>
                     </Col>
@@ -120,13 +138,11 @@ export default class Profile extends React.Component {
                       <Form.Item
                         name="password_retype"
                         label="تێپەڕەوشە/دووبارە"
+                        extra="تێبینی: ئەم بەشە پێویست نیە بنوسرێت تەنها لەکاتی گۆڕینی تێپەڕەوشە"
                         dependencies={['password']}
                         hasFeedback
                         rules={[
-                          {
-                            required: true,
-                            message: 'دوبارەی تێپەڕەوشە پێویستە',
-                          },
+
                           ({ getFieldValue }) => ({
                             validator(_, value) {
                               if (!value || getFieldValue('password') === value) {
@@ -137,13 +153,13 @@ export default class Profile extends React.Component {
                           }),
                         ]}
                       >
-                        <Input.Password autoComplete="off" className="is-ltr" prefix={<LockOutlined className="is-icon-prefix" />} />
+                        <Input.Password size="large" autoComplete="new" className="is-ltr" prefix={<LockOutlined className="is-icon-prefix" />} />
 
                       </Form.Item>
                     </Col>
                     <Col span={24}>
                       <Form.Item name="submit">
-                        <Button loading={loading} htmlType="submit" block type="primary">دروستکردنی هەژمار</Button>
+                        <Button size="large" loading={loading} htmlType="submit" block type="primary">نوێکردنەوەی زانیاریەکانم</Button>
                       </Form.Item>
                     </Col>
                     {errMsg ? (
@@ -153,16 +169,6 @@ export default class Profile extends React.Component {
                     ) : null}
                   </Row>
                 </Form>
-              </Col>
-
-              <Col span={24}>
-                <Divider />
-                <p className="is-size-6">
-                  چوونەژوورەوە بۆ ناسینەوەی وێنە
-                  <Link href="/auth/password-recovery">
-                    <a href="#_" style={{ color: 'red' }}> تێپەڕەوشەم بیرچۆتەوە ؟  </a>
-                  </Link>
-                </p>
               </Col>
             </Row>
           </Card>

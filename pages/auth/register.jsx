@@ -87,7 +87,7 @@ export default class Register extends React.Component {
                           { required: true, message: 'ناوی بەکارهێنەر پێویستە هەبێت' },
                         ]}
                       >
-                        <Input size="large" autoComplete="off" prefix={<UserOutlined className="is-icon-prefix" />} />
+                        <Input size="large" autoComplete="new" prefix={<UserOutlined className="is-icon-prefix" />} />
                       </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -96,7 +96,7 @@ export default class Register extends React.Component {
                         label="شوێنی کار/کۆمپانیا"
                         extra="دەکرێت بە بەتاڵی بەجێی بهێڵیت / ئارەزوومەندانەیە "
                       >
-                        <Input size="large" autoComplete="off" prefix={<TeamOutlined className="is-icon-prefix" />} />
+                        <Input size="large" autoComplete="new" prefix={<TeamOutlined className="is-icon-prefix" />} />
                       </Form.Item>
                     </Col>
                     <Col span={24}>
@@ -108,7 +108,7 @@ export default class Register extends React.Component {
                           { type: 'email', message: 'پۆستی ئەلیکترۆنی/ئیمەیڵ دروست بنووسە' },
                         ]}
                       >
-                        <Input size="large" autoComplete="off" className="is-ltr" prefix={<ContactsOutlined className="is-icon-prefix" />} />
+                        <Input size="large" autoComplete="new" className="is-ltr" prefix={<ContactsOutlined className="is-icon-prefix" />} />
                       </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -120,7 +120,7 @@ export default class Register extends React.Component {
                         ]}
                         hasFeedback
                       >
-                        <Input.Password autoComplete="off" size="large" className="is-ltr" prefix={<LockOutlined className="is-icon-prefix" />} />
+                        <Input.Password autoComplete="new" size="large" className="is-ltr" prefix={<LockOutlined className="is-icon-prefix" />} />
 
                       </Form.Item>
                     </Col>
@@ -146,7 +146,7 @@ export default class Register extends React.Component {
                           }),
                         ]}
                       >
-                        <Input.Password autoComplete="off" size="large" className="is-ltr" prefix={<LockOutlined className="is-icon-prefix" />} />
+                        <Input.Password autoComplete="new" size="large" className="is-ltr" prefix={<LockOutlined className="is-icon-prefix" />} />
 
                       </Form.Item>
                     </Col>

@@ -5,7 +5,7 @@ import { Tabs } from 'antd';
 import authGuard from '../../helpers/authGuard';
 import Layout from '../../components/layout/Index';
 import ProfileForm from '../../components/setting/Profile';
-import PasswordRecoverySuccess from '../../components/auth/PasswordRecoverySuccess';
+import ForDevelopers from '../../components/setting/ForDevelopers';
 
 class Profile extends React.Component {
   constructor() {
@@ -20,7 +20,7 @@ class Profile extends React.Component {
       marginLeft: 5,
       marginBottom: -5,
     };
-    const { url } = this.props;
+    const { url, user } = this.props;
     return (
       <Layout
         url={url}
@@ -36,7 +36,7 @@ class Profile extends React.Component {
             )}
             key="profile"
           >
-            <ProfileForm token="dwa" />
+            <ProfileForm user={user} />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={(
@@ -47,7 +47,7 @@ class Profile extends React.Component {
             )}
             key="for-devs"
           >
-            <PasswordRecoverySuccess />
+            <ForDevelopers user={user} />
           </Tabs.TabPane>
         </Tabs>
       </Layout>
