@@ -6,7 +6,7 @@ import {
   List,
 } from 'antd';
 
-export default class Profile extends React.Component {
+export default class ForDevelopers extends React.Component {
   constructor() {
     super();
     this.initialState = () => ({

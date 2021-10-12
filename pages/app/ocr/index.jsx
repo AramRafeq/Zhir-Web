@@ -1,9 +1,10 @@
 import React from 'react';
 import { withIronSession } from 'next-iron-session';
-import { Button } from 'antd';
+import { Tabs } from 'antd';
+import { MdDocumentScanner } from 'react-icons/md';
 import authGuard from '../../../helpers/authGuard';
 import Layout from '../../../components/layout/Index';
-import Login from '../../../components/auth/PasswordRecoveryForm';
+import OCR from '../../../components/ocr/Ocr';
 
 class OCRIndex extends React.Component {
   constructor() {
@@ -14,18 +15,29 @@ class OCRIndex extends React.Component {
 
   render() {
     const { url } = this.props;
+    const TabIconStyle = {
+      fontSize: 15,
+      marginLeft: 5,
+      marginBottom: -5,
+    };
     return (
       <Layout
         url={url}
-        cardTitle={(
-          <Button.Group style={{ width: '100%' }}>
-            <Button block>سڵاو جیهان</Button>
-            <Button block>زانیاریەکانم</Button>
-            <Button block>کڕین</Button>
-          </Button.Group>
-)}
       >
-        <Login token="akjdwa" />
+        <Tabs tabPosition="top" defaultActiveKey="ocr">
+          <Tabs.TabPane
+            tab={(
+              <span>
+                <MdDocumentScanner style={TabIconStyle} />
+                دەرهێنانی نووسین
+              </span>
+            )}
+            key="ocr"
+          >
+            <OCR />
+          </Tabs.TabPane>
+
+        </Tabs>
       </Layout>
     );
   }

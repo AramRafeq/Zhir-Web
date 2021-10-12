@@ -54,3 +54,27 @@ div[role="alert"],.ant-form-item-extra{
     width: 100%;
     height: 100%;
 }
+
+/* Uploader related classes  */
+
+.upload-container-base{
+    padding: 20px;
+    border-radius: 6px;
+    text-align: center;
+    
+}
+.upload-container-active{
+    background: #faf0ff;
+    border: 3px dashed #f2d7ff;
+   
+}
+
+.upload-container-disabled{
+    background: #ffe4e4;
+    border: 3px dashed #ffd1d1;
+   
+}
+.upload-container-spin{
+    color: #e9b9b9 !important;
+    margin: 10px;
+}
