@@ -64,7 +64,7 @@ div[role="alert"],.ant-form-item-extra{
     
 }
 .upload-container-active{
-    background: #faf0ff;
+    background: #fdfdfd;
     border: 3px dashed #f2d7ff;
    
 }
@@ -77,4 +77,8 @@ div[role="alert"],.ant-form-item-extra{
 .upload-container-spin{
     color: #e9b9b9 !important;
     margin: 10px;
+}
+
+.draggble{
+
 }
