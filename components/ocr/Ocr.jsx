@@ -10,7 +10,7 @@ export default function Ocr() {
   return (
     <>
       <Row gutter={[10, 10]}>
-        <Col span={14}>
+        <Col span={24}>
           <Uploader />
         </Col>
       </Row>

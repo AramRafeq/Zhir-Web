@@ -2,22 +2,21 @@
 import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import ReactDragListView from 'react-drag-listview/lib/index';
+import prettyBytes from 'pretty-bytes';
 import _ from 'lodash';
 import {
   Spin, List,
   notification, Avatar,
+  Popconfirm,
   Button,
+  Tag,
 } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { LoadingOutlined, ClearOutlined } from '@ant-design/icons';
 import {
   AiOutlineCloudUpload,
-
+  AiOutlineDelete,
   AiOutlineEdit,
 } from 'react-icons/ai';
-
-import {
-  BsTrash,
-} from 'react-icons/bs';
 
 const swapArrayLoc = (arr, from, to) => {
   const temp = arr[to];
@@ -41,19 +40,47 @@ const acceptedFileTypes = [
   'image/png',
   // 'application/pdf',
 ];
+const mapErrCodeToMsg = (code) => {
+  // alert(code);
+  switch (code) {
+    case 'file-too-large': return (
+      <>
+        قەبارەی فایل گەورەترە لە
+        &nbsp;
+        <span className="is-ltr">
+          {prettyBytes(maxFileSize)}
+        </span>
+      </>
+    );
+    case 'file-invalid-type': return 'جۆری فایل ڕێگەپێدراو نیە';
+    default: return 'هەڵەیەکی نەزانراو';
+  }
+};
 
 export default function Uploader() {
   const [uploaderLoading, setuploaderLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
 
   const onDropAccepted = (acceptedFiles) => {
-    setFileList([...acceptedFiles, ...fileList]);
+    const uniqFiles = _.uniqBy([...acceptedFiles, ...fileList], 'name');
+    setFileList(uniqFiles);
     // use bellow url for generating blob url for an image
     // URL.createObjectURL(file)
   };
+  const onDropRejected = (rejectedFiles) => {
+    rejectedFiles.forEach((o) => {
+      notification.error({
+        message: `نەتواندرا فایلی  ${o.file.name} زیاد بکرێت لەبەر ئەم هۆکارانە`,
+        description: (
+          <ul>
+            {o.errors.map((err) => <li>{mapErrCodeToMsg(err.code)}</li>)}
+          </ul>
+        ),
+        placement: 'bottomRight',
+      });
+    });
+  };
   const {
-    acceptedFiles,
-    fileRejections,
     getRootProps,
     getInputProps,
   } = useDropzone({
@@ -62,56 +89,22 @@ export default function Uploader() {
     disabled: uploaderLoading,
     maxSize: maxFileSize,
     onDropAccepted,
+    onDropRejected,
   });
   const onDragEnd = (fromIndex, toIndex) => {
     if (toIndex < 0) return; // Ignores if outside designated area
     const fileListCopy = _.clone(fileList);
-    console.log(fromIndex, toIndex);
-    console.log(fileListCopy);
-
     swapArrayLoc(fileListCopy, fromIndex - 1, toIndex - 1);
-    console.log(fileListCopy);
     setFileList(fileListCopy);
-
-    // const items = [...this.state.data];
-    // const item = items.splice(fromIndex, 1)[0];
-    // items.splice(toIndex, 0, item);
-    // this.setState({ data: items });
   };
-
-  const acceptedFileItems = acceptedFiles.map((file) => (
-    <li key={file.path}>
-      {file.path}
-      {' '}
-      -
-      {' '}
-      {file.size}
-      {' '}
-      bytes
-    </li>
-  ));
-
-  const fileRejectionItems = fileRejections.map(({ file, errors }) => (
-    <li key={file.path}>
-      {file.path}
-      {' '}
-      -
-      {' '}
-      {file.size}
-      {' '}
-      bytes
-      <ul>
-        {errors.map((e) => (
-          <li key={e.code}>
-            {e.code}
-            /
-            {' '}
-            {e.message}
-          </li>
-        ))}
-      </ul>
-    </li>
-  ));
+  const deleteConfirmed = (file) => {
+    const fileListCopy = _.clone(fileList);
+    _.remove(fileListCopy, (f) => f.name === file.name);
+    setFileList(fileListCopy);
+  };
+  const clearAll = () => {
+    setFileList([]);
+  };
 
   return (
     <>
@@ -125,19 +118,29 @@ export default function Uploader() {
             : <AiOutlineCloudUpload style={{ fontSize: '6rem', color: '#d9aeed' }} />}
           <p>(تەنها: وێنەو و فایلی PDF ڕێگەپێدراون)</p>
         </div>
-        <aside>
-          {/* <h4>Accepted files</h4>
-              <ul>{acceptedFileItems}</ul> */}
-          <h4>Rejected files</h4>
-          <ul>{fileRejectionItems}</ul>
-        </aside>
 
         <ReactDragListView
           nodeSelector=".draggble"
           onDragEnd={onDragEnd}
         >
           <List bordered>
-            <List.Item>
+            <List.Item
+              className="is-primary-text"
+              actions={[
+                <Popconfirm
+                  title="ئایا دڵنیای لە سڕینەوەی هەموو فایلەکان ؟"
+                  onConfirm={clearAll}
+                  okText="بەڵێ"
+                  cancelText="نەخێر"
+                  disabled={fileList.length === 0}
+                >
+                  <Button disabled={fileList.length === 0} size="small" danger icon={<ClearOutlined />}>
+                    سڕینەوەی هەموو
+                  </Button>
+                </Popconfirm>,
+
+              ]}
+            >
               {(maxFiles - fileList.length) <= 0 ? 'گەشیتیت بە سنوری بارکردن بۆ یەک کرداری ناسینەوە '
                 : (
                   <>
@@ -153,23 +156,39 @@ export default function Uploader() {
                   </>
                 )}
             </List.Item>
-            {fileList.map((file) => (
+            {fileList.map((file) => {
+              const blobUrl = URL.createObjectURL(file);
+              return (
 
-              <List.Item
-                key={file.name}
-                className="draggble"
-                actions={[
-                  <Button type="link" size="small"><AiOutlineEdit /></Button>,
-                  <Button type="link" size="small"><BsTrash /></Button>,
-                ]}
-              >
-                <List.Item.Meta
-                  avatar={<Avatar src={URL.createObjectURL(file)} />}
-                  title={<a href="https://ant.design">{file.name}</a>}
-                  description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                />
-              </List.Item>
-            ))}
+                <List.Item
+                  key={file.name}
+                  className="draggble"
+                  actions={[
+                    <Button type="link" size="small"><AiOutlineEdit className="is-dark-grey-text" /></Button>,
+                    <Popconfirm
+                      title="ئایا دڵنیای لە سڕینەوەی ئەم وێنەیە ؟"
+                      onConfirm={() => deleteConfirmed(file)}
+                      okText="بەڵێ"
+                      cancelText="نەخێر"
+                    >
+                      <Button type="link" size="small"><AiOutlineDelete className="is-danger-text" /></Button>
+                    </Popconfirm>,
+                  ]}
+                >
+                  <List.Item.Meta
+                    avatar={<Avatar src={blobUrl} />}
+                    title={<a href={blobUrl} target="_blank" rel="noreferrer">{file.name}</a>}
+                    description={(
+                      <>
+                        <Tag className="is-ltr" color="gold">{prettyBytes(file.size)}</Tag>
+                        <Tag className="is-ltr" color="cyan">{file.type}</Tag>
+                        <Tag className="is-ltr" color="pink">{new Date(file.lastModified).toUTCString()}</Tag>
+                      </>
+                    )}
+                  />
+                </List.Item>
+              );
+            })}
           </List>
         </ReactDragListView>
       </section>
