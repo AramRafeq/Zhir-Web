@@ -13,9 +13,9 @@
 body{
     overflow-x: hidden;
 }
-* {
+/* * {
     font-family: "vazir";
-}
+} */
 div[role="alert"],.ant-form-item-extra{
     font-size: 12px !important;
 }

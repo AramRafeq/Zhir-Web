@@ -1,4 +1,5 @@
 import React from 'react';
+import Head from 'next/head';
 import { withIronSession } from 'next-iron-session';
 import { Tabs } from 'antd';
 import { MdDocumentScanner } from 'react-icons/md';
@@ -21,24 +22,29 @@ class OCRIndex extends React.Component {
       marginBottom: -5,
     };
     return (
-      <Layout
-        url={url}
-      >
-        <Tabs tabPosition="top" defaultActiveKey="ocr">
-          <Tabs.TabPane
-            tab={(
-              <span>
-                <MdDocumentScanner style={TabIconStyle} />
-                دەرهێنانی نووسین
-              </span>
+      <>
+        <Head>
+          <script src="https://cdn.scaleflex.it/plugins/filerobot-image-editor/3.12.17/filerobot-image-editor.min.js" />
+        </Head>
+        <Layout
+          url={url}
+        >
+          <Tabs tabPosition="top" defaultActiveKey="ocr">
+            <Tabs.TabPane
+              tab={(
+                <span>
+                  <MdDocumentScanner style={TabIconStyle} />
+                  دەرهێنانی نووسین
+                </span>
             )}
-            key="ocr"
-          >
-            <OCR />
-          </Tabs.TabPane>
+              key="ocr"
+            >
+              <OCR />
+            </Tabs.TabPane>
 
-        </Tabs>
-      </Layout>
+          </Tabs>
+        </Layout>
+      </>
     );
   }
 }

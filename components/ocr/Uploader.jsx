@@ -4,6 +4,7 @@ import { useDropzone } from 'react-dropzone';
 import ReactDragListView from 'react-drag-listview/lib/index';
 import prettyBytes from 'pretty-bytes';
 import _ from 'lodash';
+
 import {
   Spin, List,
   notification, Avatar,
@@ -17,6 +18,7 @@ import {
   AiOutlineDelete,
   AiOutlineEdit,
 } from 'react-icons/ai';
+import ImageEditor from './ImageEditor';
 
 const swapArrayLoc = (arr, from, to) => {
   const temp = arr[to];
@@ -40,6 +42,7 @@ const acceptedFileTypes = [
   'image/png',
   // 'application/pdf',
 ];
+
 const mapErrCodeToMsg = (code) => {
   // alert(code);
   switch (code) {
@@ -60,6 +63,7 @@ const mapErrCodeToMsg = (code) => {
 export default function Uploader() {
   const [uploaderLoading, setuploaderLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
+  const [editingFile, setEditingFile] = useState(null);
 
   const onDropAccepted = (acceptedFiles) => {
     const uniqFiles = _.uniqBy([...acceptedFiles, ...fileList], 'name');
@@ -101,14 +105,27 @@ export default function Uploader() {
     const fileListCopy = _.clone(fileList);
     _.remove(fileListCopy, (f) => f.name === file.name);
     setFileList(fileListCopy);
+    setEditingFile(null);
   };
   const clearAll = () => {
     setFileList([]);
+    setEditingFile(null);
   };
-
+  const imageEditBtnClicked = (file, index) => {
+    // eslint-disable-next-line no-param-reassign
+    file.index = index;
+    setEditingFile(file);
+  };
+  const imageEditingFinished = (editedFile, originalFile) => {
+    setEditingFile(null);
+    const fileListCopy = _.clone(fileList);
+    fileListCopy[originalFile.index] = editedFile;
+    setFileList(fileListCopy);
+  };
   return (
     <>
-
+      <ImageEditor file={editingFile} onFinish={imageEditingFinished} />
+      {/* <Button onClick={imageEditBtnClicked}>Edit Image</Button> */}
       <section className={`upload-container-base ${uploaderLoading ? 'upload-container-disabled' : 'upload-container-active'}`}>
         <div {...getRootProps({ className: 'dropzone' })}>
           <input {...getInputProps()} />
@@ -156,7 +173,7 @@ export default function Uploader() {
                   </>
                 )}
             </List.Item>
-            {fileList.map((file) => {
+            {fileList.map((file, index) => {
               const blobUrl = URL.createObjectURL(file);
               return (
 
@@ -164,7 +181,7 @@ export default function Uploader() {
                   key={file.name}
                   className="draggble"
                   actions={[
-                    <Button type="link" size="small"><AiOutlineEdit className="is-dark-grey-text" /></Button>,
+                    <Button type="link" onClick={() => imageEditBtnClicked(file, index)} size="small"><AiOutlineEdit className="is-dark-grey-text" /></Button>,
                     <Popconfirm
                       title="ئایا دڵنیای لە سڕینەوەی ئەم وێنەیە ؟"
                       onConfirm={() => deleteConfirmed(file)}
@@ -180,9 +197,33 @@ export default function Uploader() {
                     title={<a href={blobUrl} target="_blank" rel="noreferrer">{file.name}</a>}
                     description={(
                       <>
-                        <Tag className="is-ltr" color="gold">{prettyBytes(file.size)}</Tag>
-                        <Tag className="is-ltr" color="cyan">{file.type}</Tag>
-                        <Tag className="is-ltr" color="pink">{new Date(file.lastModified).toUTCString()}</Tag>
+                        <Tag color="gold" style={{ margin: 2 }}>
+                          قەبارە
+                          &nbsp;
+                          {prettyBytes(file.size)}
+                        </Tag>
+                        <Tag color="cyan" style={{ margin: 2 }}>
+                          جۆر
+                          &nbsp;
+                          {file.type}
+                        </Tag>
+                        <Tag color="default" style={{ margin: 2 }}>
+                          بەرواری دەسکاریکردن
+                          &nbsp;
+                          {new Date(file.lastModified).toUTCString()}
+                        </Tag>
+                        {
+                          file.edits
+                            ? (
+                              <Tag color="red" style={{ margin: 2 }}>
+                                {file.edits}
+                                &nbsp;
+                                جار
+                                دەسکاری کراوە
+                              </Tag>
+                            )
+                            : null
+                        }
                       </>
                     )}
                   />
@@ -192,7 +233,6 @@ export default function Uploader() {
           </List>
         </ReactDragListView>
       </section>
-
     </>
   );
 }
