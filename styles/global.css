@@ -4,9 +4,9 @@
     --danger-color: #dc3545;
     --dark-grey-color: #878787;
     --success-color: #48c774;
-    --upload-container-active-bg: #fdfdfd;
+    --upload-container-active-bg: white;
     --upload-container-active-border: #f2d7ff;
-    --upload-container-disabled-bg: #ffe4e4;
+    --upload-container-disabled-bg: white;
     --upload-container-disabled-border: #ffd1d1;
     --upload-container-inner-spin: #e9b9b9;
 }

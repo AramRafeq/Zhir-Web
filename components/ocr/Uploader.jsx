@@ -12,13 +12,17 @@ import {
   Button,
   Tag,
 } from 'antd';
-import { LoadingOutlined, ClearOutlined } from '@ant-design/icons';
+
+import {
+  LoadingOutlined, ClearOutlined, CloudUploadOutlined,
+} from '@ant-design/icons';
 import {
   AiOutlineCloudUpload,
   AiOutlineDelete,
   AiOutlineEdit,
 } from 'react-icons/ai';
 import ImageEditor from './ImageEditor';
+import PDFConvertor from './PDFConvertor';
 
 const swapArrayLoc = (arr, from, to) => {
   const temp = arr[to];
@@ -40,7 +44,7 @@ const acceptedFileTypes = [
   'image/tiff',
   'image/tif',
   'image/png',
-  // 'application/pdf',
+  'application/pdf',
 ];
 
 const mapErrCodeToMsg = (code) => {
@@ -63,11 +67,43 @@ const mapErrCodeToMsg = (code) => {
 export default function Uploader() {
   const [uploaderLoading, setuploaderLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
+  const [PDFfiles, setPDFfiles] = useState([]);
+  const [convertedPDFfiles, setConvertedPDFfiles] = useState([]);
   const [editingFile, setEditingFile] = useState(null);
 
   const onDropAccepted = (acceptedFiles) => {
-    const uniqFiles = _.uniqBy([...acceptedFiles, ...fileList], 'name');
+    const filteredPDFfiles = acceptedFiles.filter((f) => f.type === 'application/pdf');
+    const otherFiles = acceptedFiles.filter((f) => f.type !== 'application/pdf');
+    const uniqFiles = _.uniqBy([...otherFiles, ...fileList], 'name');
     setFileList(uniqFiles);
+    if (filteredPDFfiles.length > 0) {
+      const filteredPDFfiles2 = filteredPDFfiles
+        .filter((f) => convertedPDFfiles.indexOf(f.name) < 0);
+      if (filteredPDFfiles2.length !== filteredPDFfiles.length) {
+        notification.error({
+          message: 'فایلی PDF دوبارە دۆزرایەوە',
+          description: 'هەندێک فایلی دووبارە دۆزرانەوە کە پێشووتر کراون بە وێنە',
+          placement: 'bottomRight',
+        });
+      } else {
+        notification.warn({
+          message: 'فایلی PDF دۆزرایەوە',
+          description: 'تکایە چاوەڕوان بکە تاوەکو ژیر فایلکەت دەگۆڕێت بۆ وێنە',
+          placement: 'bottomRight',
+          icon: <LoadingOutlined spin />,
+        });
+      }
+      if (filteredPDFfiles2.length > 1) {
+        notification.error({
+          message: 'زیاتر لە یەک فایلی PDF ت هەڵبژاردووە',
+          description: 'ژیر لەتوانایداهەیە یەک فایلی PDF بگۆرێت لە یەک کاتدا تکایە دوای تەواوبوونی ئەم کردارە دووبارە هەوڵبدەرەوە',
+          placement: 'bottomRight',
+        });
+        setPDFfiles([filteredPDFfiles2[0]]);
+      } else {
+        setPDFfiles(filteredPDFfiles2);
+      }
+    }
     // use bellow url for generating blob url for an image
     // URL.createObjectURL(file)
   };
@@ -106,10 +142,12 @@ export default function Uploader() {
     _.remove(fileListCopy, (f) => f.name === file.name);
     setFileList(fileListCopy);
     setEditingFile(null);
+    if (fileListCopy.length === 0) setConvertedPDFfiles([]);
   };
   const clearAll = () => {
     setFileList([]);
     setEditingFile(null);
+    setConvertedPDFfiles([]);
   };
   const imageEditBtnClicked = (file, index) => {
     // eslint-disable-next-line no-param-reassign
@@ -122,6 +160,16 @@ export default function Uploader() {
     fileListCopy[originalFile.index] = editedFile;
     setFileList(fileListCopy);
   };
+  const onPDFConvertFinish = (images, originalFile) => {
+    setConvertedPDFfiles([...convertedPDFfiles, originalFile.name]);
+    const PDFFilesCopy = PDFfiles.filter((f) => f.name !== originalFile.name);
+    setPDFfiles(PDFFilesCopy);
+    setFileList([...images, ...fileList]);
+    setuploaderLoading(false);
+  };
+  const onPDFConvertStart = () => {
+    setuploaderLoading(true);
+  };
   return (
     <>
       <ImageEditor file={editingFile} onFinish={imageEditingFinished} />
@@ -132,10 +180,25 @@ export default function Uploader() {
           <p>کرتە لێرە بکە یاخود هەندێک فایل رابکێشە سەر ئەم بەشە</p>
           {uploaderLoading
             ? <Spin size="large" className="upload-container-spin" indicator={<LoadingOutlined />} />
-            : <AiOutlineCloudUpload style={{ fontSize: '6rem', color: '#d9aeed' }} />}
+            : <AiOutlineCloudUpload style={{ fontSize: '4rem', color: '#d9aeed' }} />}
           <p>(تەنها: وێنەو و فایلی PDF ڕێگەپێدراون)</p>
         </div>
 
+        {PDFfiles.map((f, index) => {
+          // eslint-disable-next-line no-param-reassign
+          f.index = index;
+          if (convertedPDFfiles.indexOf(f.name) < 0) {
+            return (
+              <PDFConvertor
+                key={f.name}
+                onStart={onPDFConvertStart}
+                onFinish={onPDFConvertFinish}
+                file={f}
+              />
+            );
+          }
+          return null;
+        })}
         <ReactDragListView
           nodeSelector=".draggble"
           onDragEnd={onDragEnd}
@@ -144,6 +207,9 @@ export default function Uploader() {
             <List.Item
               className="is-primary-text"
               actions={[
+                <Button loading={uploaderLoading} disabled={fileList.length === 0} type="primary" icon={<CloudUploadOutlined />}>
+                  ناردن / بارکردن
+                </Button>,
                 <Popconfirm
                   title="ئایا دڵنیای لە سڕینەوەی هەموو فایلەکان ؟"
                   onConfirm={clearAll}
@@ -151,7 +217,7 @@ export default function Uploader() {
                   cancelText="نەخێر"
                   disabled={fileList.length === 0}
                 >
-                  <Button disabled={fileList.length === 0} size="small" danger icon={<ClearOutlined />}>
+                  <Button disabled={fileList.length === 0} danger icon={<ClearOutlined />}>
                     سڕینەوەی هەموو
                   </Button>
                 </Popconfirm>,
@@ -173,6 +239,7 @@ export default function Uploader() {
                   </>
                 )}
             </List.Item>
+
             {fileList.map((file, index) => {
               const blobUrl = URL.createObjectURL(file);
               return (
