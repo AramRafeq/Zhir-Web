@@ -39,6 +39,7 @@ div[role="alert"],.ant-form-item-extra{
     color: var(--success-color) !important;
 }
 
+
 .is-danger-text{
     color:var(--danger-color) !important;
 }

@@ -12,6 +12,9 @@ export default function Ocr() {
   const uploaderDrawerOnClose = () => {
     setUploaderDrawerVisible(false);
   };
+  const onUploaderDone = (formValues, fileList) => {
+    console.log(formValues, fileList);
+  };
   return (
     <>
       <Drawer
@@ -25,7 +28,7 @@ export default function Ocr() {
       >
         <Row gutter={[10, 10]}>
           <Col span={24}>
-            <Uploader />
+            <Uploader onUserDone={onUploaderDone} />
           </Col>
         </Row>
       </Drawer>

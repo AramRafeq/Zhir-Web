@@ -11,10 +11,15 @@ import {
   Popconfirm,
   Button,
   Tag,
+  Form,
+  Input,
+  Checkbox,
+  Row, Col,
 } from 'antd';
 
 import {
   LoadingOutlined, ClearOutlined, CloudUploadOutlined,
+  BorderlessTableOutlined,
 } from '@ant-design/icons';
 import {
   AiOutlineCloudUpload,
@@ -33,7 +38,7 @@ const swapArrayLoc = (arr, from, to) => {
 };
 
 // Global Variables
-const maxFiles = 12;
+const maxFiles = 30;
 const maxFileSize = 7e+6; // 7mb
 const acceptedFileTypes = [
   'image/jpg',
@@ -64,7 +69,8 @@ const mapErrCodeToMsg = (code) => {
   }
 };
 
-export default function Uploader() {
+export default function Uploader(props) {
+  const { onUserDone } = props;
   const [uploaderLoading, setuploaderLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
   const [PDFfiles, setPDFfiles] = useState([]);
@@ -75,7 +81,16 @@ export default function Uploader() {
     const filteredPDFfiles = acceptedFiles.filter((f) => f.type === 'application/pdf');
     const otherFiles = acceptedFiles.filter((f) => f.type !== 'application/pdf');
     const uniqFiles = _.uniqBy([...otherFiles, ...fileList], 'name');
-    setFileList(uniqFiles);
+    if (uniqFiles.length <= maxFiles) {
+      setFileList(uniqFiles);
+    } else {
+      notification.warn({
+        message: 'هەڵە ڕویدا',
+        description: `بەهۆی ئەوەی ژمارەی پەڕەکان زیاترە لە ${maxFiles} وێنە`,
+        placement: 'bottomRight',
+      });
+    }
+
     if (filteredPDFfiles.length > 0) {
       const filteredPDFfiles2 = filteredPDFfiles
         .filter((f) => convertedPDFfiles.indexOf(f.name) < 0);
@@ -164,52 +179,85 @@ export default function Uploader() {
     setConvertedPDFfiles([...convertedPDFfiles, originalFile.name]);
     const PDFFilesCopy = PDFfiles.filter((f) => f.name !== originalFile.name);
     setPDFfiles(PDFFilesCopy);
-    setFileList([...images, ...fileList]);
+    const newFileList = [...images, ...fileList];
+    if (newFileList.length <= maxFiles) {
+      setFileList(newFileList);
+    } else {
+      notification.warn({
+        message: 'نەتوانرا پەڕەکانی PDF بارکرێن',
+        description: `بەهۆی ئەوەی زیادکردنی پەڕەکان زیاترە لە ${maxFiles} وێنە`,
+        placement: 'bottomRight',
+      });
+    }
     setuploaderLoading(false);
   };
   const onPDFConvertStart = () => {
     setuploaderLoading(true);
   };
+  const onFormFinish = (values) => {
+    try {
+      onUserDone(values, fileList);
+    } catch (e) {
+      // handle on DoUpload
+    }
+  };
+  const initialFormValues = {
+    lang: ['ku'],
+  };
   return (
     <>
       <ImageEditor file={editingFile} onFinish={imageEditingFinished} />
-      {/* <Button onClick={imageEditBtnClicked}>Edit Image</Button> */}
-      <section className={`upload-container-base ${uploaderLoading ? 'upload-container-disabled' : 'upload-container-active'}`}>
-        <div {...getRootProps({ className: 'dropzone' })}>
-          <input {...getInputProps()} />
-          <p>کرتە لێرە بکە یاخود هەندێک فایل رابکێشە سەر ئەم بەشە</p>
-          {uploaderLoading
-            ? <Spin size="large" className="upload-container-spin" indicator={<LoadingOutlined />} />
-            : <AiOutlineCloudUpload style={{ fontSize: '4rem', color: '#d9aeed' }} />}
-          <p>(تەنها: وێنەو و فایلی PDF ڕێگەپێدراون)</p>
-        </div>
 
-        {PDFfiles.map((f, index) => {
-          // eslint-disable-next-line no-param-reassign
-          f.index = index;
-          if (convertedPDFfiles.indexOf(f.name) < 0) {
-            return (
-              <PDFConvertor
-                key={f.name}
-                onStart={onPDFConvertStart}
-                onFinish={onPDFConvertFinish}
-                file={f}
-              />
-            );
-          }
-          return null;
-        })}
-        <ReactDragListView
-          nodeSelector=".draggble"
-          onDragEnd={onDragEnd}
-        >
-          <List bordered>
-            <List.Item
-              className="is-primary-text"
-              actions={[
-                <Button loading={uploaderLoading} disabled={fileList.length === 0} type="primary" icon={<CloudUploadOutlined />}>
-                  ناردن / بارکردن
-                </Button>,
+      <Row gutter={[20, 10]}>
+        <Col span={8}>
+          <Form className="custom-box-shadow" style={{ width: '100%', padding: 12, borderRadius: 3 }} layout="vertical" initialValues={initialFormValues} onFinish={onFormFinish}>
+            <Row gutter={[10, 0]} align="middle">
+              <Col span={24}>
+                <Form.Item name="group_name" label="ناوێ بۆ کرداری ناسینەوە">
+                  <Input prefix={<BorderlessTableOutlined />} style={{ width: '100%' }} placeholder="نموونە: دیوانی مەحوی ١-١٠٠" />
+                </Form.Item>
+              </Col>
+              <Col span={24}>
+                <Form.Item name="lang" label="وێنەی بارکراو بە چەند زمان نووسراوە؟">
+                  <Checkbox.Group>
+                    <Row gutter={[10, 0]}>
+                      <Col span={24}>
+                        <Checkbox value="ku" style={{ lineHeight: '32px' }}>
+                          کوردی
+                        </Checkbox>
+                      </Col>
+                      <Col span={24}>
+                        <Checkbox value="ar" style={{ lineHeight: '32px' }}>
+                          عربی
+                        </Checkbox>
+                      </Col>
+                      <Col span={24}>
+                        <Checkbox value="pr" style={{ lineHeight: '32px' }}>
+                          فارسی
+                        </Checkbox>
+                      </Col>
+                      <Col span={24}>
+                        <Checkbox value="en" style={{ lineHeight: '32px' }}>
+                          ئینگلیزی
+                        </Checkbox>
+                      </Col>
+                      <Col span={24}>
+                        <Checkbox value="fr" style={{ lineHeight: '32px' }}>
+                          فەڕەنسی
+                        </Checkbox>
+                      </Col>
+                    </Row>
+                  </Checkbox.Group>
+                </Form.Item>
+              </Col>
+              <Col span={20}>
+                <Button size="middle" htmlType="submit" block loading={uploaderLoading} disabled={fileList.length === 0} type="primary" icon={<CloudUploadOutlined />}>
+                  {fileList.length}
+                  &nbsp;
+                  وێنە باربکە و بینێرە بۆ ژیر
+                </Button>
+              </Col>
+              <Col span={4}>
                 <Popconfirm
                   title="ئایا دڵنیای لە سڕینەوەی هەموو فایلەکان ؟"
                   onConfirm={clearAll}
@@ -217,89 +265,93 @@ export default function Uploader() {
                   cancelText="نەخێر"
                   disabled={fileList.length === 0}
                 >
-                  <Button disabled={fileList.length === 0} danger icon={<ClearOutlined />}>
-                    سڕینەوەی هەموو
-                  </Button>
-                </Popconfirm>,
+                  <Button block htmlType="button" type="primary" disabled={fileList.length === 0} danger icon={<ClearOutlined />} />
+                </Popconfirm>
+              </Col>
+            </Row>
+          </Form>
+        </Col>
+        <Col span={16}>
+          <ReactDragListView
+            nodeSelector=".draggble"
+            onDragEnd={onDragEnd}
+          >
+            <List className="custom-box-shadow" style={{ padding: 12, borderRadius: 3 }}>
+              <List.Item>
+                <Row justify="center" style={{ width: '100%' }}>
+                  <Col span={24} style={{ textAlign: 'center' }}>
+                    <div {...getRootProps({ className: 'dropzone' })}>
+                      <input {...getInputProps()} />
+                      {/* <p>کرتە لێرە بکە یاخود هەندێک فایل رابکێشە سەر ئەم بەشە</p> */}
+                      <p>وێنە یاخود PDF رابكیشە سەر ئەم بەشە بۆ بارکردن</p>
+                      {uploaderLoading
+                        ? <Spin size="large" className="upload-container-spin" indicator={<LoadingOutlined />} />
+                        : <AiOutlineCloudUpload style={{ fontSize: '4.5rem', color: '#d9aeed' }} />}
+                      <p style={{ fontSize: 10, color: '#d9aeed' }}>
+                        {(maxFiles - fileList.length) <= 0 ? 'گەشیتیت بە سنوری بارکردن بۆ یەک کرداری ناسینەوە '
+                          : (
+                            <>
+                              <span>
+                                توانای باردکردنی
+                                <b>
+                              &nbsp;
+                                  {maxFiles - fileList.length}
+                              &nbsp;
+                                </b>
+                                فایلی دیکەت هەیە
+                              </span>
+                            </>
+                          )}
+                      </p>
+                    </div>
+                    {PDFfiles.map((f, index) => {
+                    // eslint-disable-next-line no-param-reassign
+                      f.index = index;
+                      if (convertedPDFfiles.indexOf(f.name) < 0) {
+                        return (
+                          <PDFConvertor
+                            key={f.name}
+                            onStart={onPDFConvertStart}
+                            onFinish={onPDFConvertFinish}
+                            file={f}
+                          />
+                        );
+                      }
+                      return null;
+                    })}
+                  </Col>
+                </Row>
+              </List.Item>
+              {fileList.map((file, index) => {
+                const blobUrl = URL.createObjectURL(file);
+                return (
 
-              ]}
-            >
-              {(maxFiles - fileList.length) <= 0 ? 'گەشیتیت بە سنوری بارکردن بۆ یەک کرداری ناسینەوە '
-                : (
-                  <>
-                    <span>
-                      توانای باردکردنی
-                      <b>
-                    &nbsp;
-                        {maxFiles - fileList.length}
-                    &nbsp;
-                      </b>
-                      فایلی دیکەت هەیە
-                    </span>
-                  </>
-                )}
-            </List.Item>
-
-            {fileList.map((file, index) => {
-              const blobUrl = URL.createObjectURL(file);
-              return (
-
-                <List.Item
-                  key={file.name}
-                  className="draggble"
-                  actions={[
-                    <Button type="link" onClick={() => imageEditBtnClicked(file, index)} size="small"><AiOutlineEdit className="is-dark-grey-text" /></Button>,
-                    <Popconfirm
-                      title="ئایا دڵنیای لە سڕینەوەی ئەم وێنەیە ؟"
-                      onConfirm={() => deleteConfirmed(file)}
-                      okText="بەڵێ"
-                      cancelText="نەخێر"
-                    >
-                      <Button type="link" size="small"><AiOutlineDelete className="is-danger-text" /></Button>
-                    </Popconfirm>,
-                  ]}
-                >
-                  <List.Item.Meta
-                    avatar={<Avatar src={blobUrl} />}
-                    title={<a href={blobUrl} target="_blank" rel="noreferrer">{file.name}</a>}
-                    description={(
-                      <>
-                        <Tag color="gold" style={{ margin: 2 }}>
-                          قەبارە
-                          &nbsp;
-                          {prettyBytes(file.size)}
-                        </Tag>
-                        <Tag color="cyan" style={{ margin: 2 }}>
-                          جۆر
-                          &nbsp;
-                          {file.type}
-                        </Tag>
-                        <Tag color="default" style={{ margin: 2 }}>
-                          بەرواری دەسکاریکردن
-                          &nbsp;
-                          {new Date(file.lastModified).toUTCString()}
-                        </Tag>
-                        {
-                          file.edits
-                            ? (
-                              <Tag color="red" style={{ margin: 2 }}>
-                                {file.edits}
-                                &nbsp;
-                                جار
-                                دەسکاری کراوە
-                              </Tag>
-                            )
-                            : null
-                        }
-                      </>
-                    )}
-                  />
-                </List.Item>
-              );
-            })}
-          </List>
-        </ReactDragListView>
-      </section>
+                  <List.Item
+                    key={file.name}
+                    className="draggble"
+                    actions={[
+                      <Button type="link" onClick={() => imageEditBtnClicked(file, index)} size="small"><AiOutlineEdit className="is-dark-grey-text" /></Button>,
+                      <Popconfirm
+                        title="ئایا دڵنیای لە سڕینەوەی ئەم وێنەیە ؟"
+                        onConfirm={() => deleteConfirmed(file)}
+                        okText="بەڵێ"
+                        cancelText="نەخێر"
+                      >
+                        <Button type="link" size="small"><AiOutlineDelete className="is-danger-text" /></Button>
+                      </Popconfirm>,
+                    ]}
+                  >
+                    <List.Item.Meta
+                      avatar={<Avatar src={blobUrl} size="large" />}
+                      title={<a href={blobUrl} target="_blank" rel="noreferrer">{file.name}</a>}
+                    />
+                  </List.Item>
+                );
+              })}
+            </List>
+          </ReactDragListView>
+        </Col>
+      </Row>
     </>
   );
 }
