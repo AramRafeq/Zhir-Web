@@ -57,12 +57,12 @@ class Index extends React.Component {
           collapsible
           collapsed={sideBarCollapsed}
           onCollapse={this.onCollapse}
-          theme="light"
+          theme="dark"
         >
           <div className="sidebar-logo-container">
             <Row justify="center" align="middle">
               <Col span={24} style={{ padding: sideBarCollapsed ? '1.25rem' : '4.063rem 5.063rem 0' }}>
-                <img src="/assets/black-logo.png" className="logo" alt="logo" />
+                <img src="/assets/white-logo.png" className="logo" alt="logo" />
               </Col>
               <Col span={24}>
                 {
@@ -84,7 +84,7 @@ class Index extends React.Component {
               </Col>
             </Row>
           </div>
-          <Menu theme="light" mode="vertical" defaultSelectedKeys={[url]}>
+          <Menu theme="dark" mode="vertical" defaultSelectedKeys={[url]}>
             <Menu.Item icon={<MdDocumentScanner className="custom-icon" />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="/app/ocr">
               <a href="/app/ocr">ناسینەوەی وێنە</a>
             </Menu.Item>

@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
+// https://www.npmjs.com/package/react-grid-drag use for draging from a grid
 import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import ReactDragListView from 'react-drag-listview/lib/index';
@@ -15,17 +16,28 @@ import {
   Input,
   Checkbox,
   Row, Col,
+  Card,
+  Image,
 } from 'antd';
 
 import {
   LoadingOutlined, ClearOutlined, CloudUploadOutlined,
   BorderlessTableOutlined,
+  DragOutlined,
 } from '@ant-design/icons';
 import {
   AiOutlineCloudUpload,
   AiOutlineDelete,
   AiOutlineEdit,
 } from 'react-icons/ai';
+
+import {
+  SortableContainer,
+  SortableElement,
+  SortableHandle,
+
+} from 'react-sortable-hoc';
+import arrayMove from 'array-move';
 import ImageEditor from './ImageEditor';
 import PDFConvertor from './PDFConvertor';
 
@@ -201,15 +213,70 @@ export default function Uploader(props) {
       // handle on DoUpload
     }
   };
+  const onGridSortEnd = ({ oldIndex, newIndex }) => {
+    const fileListCopy = _.clone(fileList);
+    swapArrayLoc(fileListCopy, oldIndex, newIndex);
+    setFileList(fileListCopy);
+  };
   const initialFormValues = {
     lang: ['ku'],
   };
+  const cardStyleGrid = {
+    width: '25%',
+    height: 200,
+    padding: 10,
+    'z-index': '1001',
+  };
+  const Handle = SortableHandle(({ tabIndex }) => (
+    <Button block type="link" size="small" tabIndex={tabIndex}>
+      <DragOutlined className="is-dark-grey-text" />
+    </Button>
+  ));
+  const SortableItem = SortableElement((elementProps) => {
+    const { file, index } = elementProps;
+    const blobUrl = URL.createObjectURL(file);
+    return (
+      <Card.Grid style={cardStyleGrid} hoverable={false}>
+        <Image height={100} width="100%" src={blobUrl} />
+        <p>{file.name}</p>
+        <Button.Group style={{ width: '100%' }}>
+          <Button block type="link" onClick={() => imageEditBtnClicked(file, index)} size="small"><AiOutlineEdit className="is-dark-grey-text" /></Button>
+          <Popconfirm
+            title="ئایا دڵنیای لە سڕینەوەی ئەم وێنەیە ؟"
+            onConfirm={() => deleteConfirmed(file)}
+            okText="بەڵێ"
+            cancelText="نەخێر"
+          >
+            <Button block type="link" size="small"><AiOutlineDelete className="is-danger-text" /></Button>
+          </Popconfirm>
+          <Handle />
+        </Button.Group>
+      </Card.Grid>
+    );
+  });
+
+  const SortableList = SortableContainer((containerPops) => {
+    const { files, ...restProps } = containerPops;
+    return (
+      <Card gutter={[10, 10]} hoverable={false}>
+        {files.map((file, index) => (
+          <SortableItem
+            key={`item-${file.name}`}
+            index={index}
+            file={file}
+            {...restProps}
+          />
+        ))}
+      </Card>
+    );
+  });
+
   return (
     <>
       <ImageEditor file={editingFile} onFinish={imageEditingFinished} />
 
-      <Row gutter={[20, 10]}>
-        <Col span={8}>
+      <Row gutter={[30, 10]}>
+        <Col span={8} style={{ position: 'fixed' }}>
           <Form className="custom-box-shadow" style={{ width: '100%', padding: 12, borderRadius: 3 }} layout="vertical" initialValues={initialFormValues} onFinish={onFormFinish}>
             <Row gutter={[10, 0]} align="middle">
               <Col span={24}>
@@ -271,18 +338,18 @@ export default function Uploader(props) {
             </Row>
           </Form>
         </Col>
-        <Col span={16}>
+        <Col span={16} offset={8}>
           <ReactDragListView
             nodeSelector=".draggble"
             onDragEnd={onDragEnd}
           >
+
             <List className="custom-box-shadow" style={{ padding: 12, borderRadius: 3 }}>
               <List.Item>
                 <Row justify="center" style={{ width: '100%' }}>
                   <Col span={24} style={{ textAlign: 'center' }}>
                     <div {...getRootProps({ className: 'dropzone' })}>
                       <input {...getInputProps()} />
-                      {/* <p>کرتە لێرە بکە یاخود هەندێک فایل رابکێشە سەر ئەم بەشە</p> */}
                       <p>وێنە یاخود PDF رابكیشە سەر ئەم بەشە بۆ بارکردن</p>
                       {uploaderLoading
                         ? <Spin size="large" className="upload-container-spin" indicator={<LoadingOutlined />} />
@@ -322,10 +389,9 @@ export default function Uploader(props) {
                   </Col>
                 </Row>
               </List.Item>
-              {fileList.map((file, index) => {
+              {/* {fileList.map((file, index) => {
                 const blobUrl = URL.createObjectURL(file);
                 return (
-
                   <List.Item
                     key={file.name}
                     className="draggble"
@@ -347,9 +413,38 @@ export default function Uploader(props) {
                     />
                   </List.Item>
                 );
-              })}
+              })} */}
             </List>
           </ReactDragListView>
+          <SortableList
+            shouldUseDragHandle
+            useDragHandle
+            axis="xy"
+            files={fileList}
+            onSortEnd={onGridSortEnd}
+          />
+          {/* <Card title="لیستی وێنەکان" hoverable={false}>
+            {fileList.map((file, index) => {
+              const blobUrl = URL.createObjectURL(file);
+              return (
+                <Card.Grid style={cardStyleGrid}>
+                  <Image width="100%" src={blobUrl} />
+                  <Button.Group style={{ width: '100%' }}>
+                    <Button block type="link" onClick={() => imageEditBtnClicked(file, index)} size="small"><AiOutlineEdit className="is-dark-grey-text" /></Button>
+                    <Popconfirm
+                      title="ئایا دڵنیای لە سڕینەوەی ئەم وێنەیە ؟"
+                      onConfirm={() => deleteConfirmed(file)}
+                      okText="بەڵێ"
+                      cancelText="نەخێر"
+                    >
+                      <Button block type="link" size="small"><AiOutlineDelete className="is-danger-text" /></Button>
+                    </Popconfirm>
+                  </Button.Group>
+                </Card.Grid>
+              );
+            })}
+          </Card> */}
+
         </Col>
       </Row>
     </>

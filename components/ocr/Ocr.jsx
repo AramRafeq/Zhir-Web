@@ -18,10 +18,11 @@ export default function Ocr() {
   return (
     <>
       <Drawer
+        zIndex={10}
         visible={uploaderDrawerVisible}
         onClose={uploaderDrawerOnClose}
-        placement="left"
-        width="70%"
+        placement="top"
+        height="100%"
         keyboard={false}
         destroyOnClose
         title="بارکردنی وێنە"
