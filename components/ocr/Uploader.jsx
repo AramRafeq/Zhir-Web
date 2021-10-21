@@ -11,12 +11,11 @@ import {
   notification, Avatar,
   Popconfirm,
   Button,
-  Tag,
   Form,
   Input,
   Checkbox,
-  Row, Col,
-  Card,
+  Row,
+  Col,
   Image,
 } from 'antd';
 
@@ -24,6 +23,8 @@ import {
   LoadingOutlined, ClearOutlined, CloudUploadOutlined,
   BorderlessTableOutlined,
   DragOutlined,
+  UnorderedListOutlined,
+  TableOutlined,
 } from '@ant-design/icons';
 import {
   AiOutlineCloudUpload,
@@ -32,12 +33,22 @@ import {
 } from 'react-icons/ai';
 
 import {
-  SortableContainer,
-  SortableElement,
-  SortableHandle,
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  useSortable,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable';
 
-} from 'react-sortable-hoc';
-import arrayMove from 'array-move';
+import { CSS } from '@dnd-kit/utilities';
+
 import ImageEditor from './ImageEditor';
 import PDFConvertor from './PDFConvertor';
 
@@ -84,16 +95,26 @@ const mapErrCodeToMsg = (code) => {
 export default function Uploader(props) {
   const { onUserDone } = props;
   const [uploaderLoading, setuploaderLoading] = useState(false);
+  const [viewingMode, setViewingMode] = useState('grid'); // possible values grid,list
   const [fileList, setFileList] = useState([]);
   const [PDFfiles, setPDFfiles] = useState([]);
   const [convertedPDFfiles, setConvertedPDFfiles] = useState([]);
   const [editingFile, setEditingFile] = useState(null);
 
+  const toggleViewingMode = () => {
+    const newMode = viewingMode === 'grid' ? 'list' : 'grid';
+    setViewingMode(newMode);
+  };
   const onDropAccepted = (acceptedFiles) => {
     const filteredPDFfiles = acceptedFiles.filter((f) => f.type === 'application/pdf');
     const otherFiles = acceptedFiles.filter((f) => f.type !== 'application/pdf');
     const uniqFiles = _.uniqBy([...otherFiles, ...fileList], 'name');
     if (uniqFiles.length <= maxFiles) {
+      uniqFiles.map((f) => {
+        // eslint-disable-next-line no-param-reassign
+        f.blob = URL.createObjectURL(f);
+        return f;
+      });
       setFileList(uniqFiles);
     } else {
       notification.warn({
@@ -162,11 +183,17 @@ export default function Uploader(props) {
     if (toIndex < 0) return; // Ignores if outside designated area
     const fileListCopy = _.clone(fileList);
     swapArrayLoc(fileListCopy, fromIndex - 1, toIndex - 1);
+    fileListCopy.map((f) => {
+      // eslint-disable-next-line no-param-reassign
+      f.blob = URL.createObjectURL(f);
+      return f;
+    });
     setFileList(fileListCopy);
   };
   const deleteConfirmed = (file) => {
     const fileListCopy = _.clone(fileList);
     _.remove(fileListCopy, (f) => f.name === file.name);
+
     setFileList(fileListCopy);
     setEditingFile(null);
     if (fileListCopy.length === 0) setConvertedPDFfiles([]);
@@ -184,6 +211,8 @@ export default function Uploader(props) {
   const imageEditingFinished = (editedFile, originalFile) => {
     setEditingFile(null);
     const fileListCopy = _.clone(fileList);
+    // eslint-disable-next-line no-param-reassign
+    editedFile.blob = URL.createObjectURL(editedFile);
     fileListCopy[originalFile.index] = editedFile;
     setFileList(fileListCopy);
   };
@@ -193,6 +222,11 @@ export default function Uploader(props) {
     setPDFfiles(PDFFilesCopy);
     const newFileList = [...images, ...fileList];
     if (newFileList.length <= maxFiles) {
+      newFileList.map((f) => {
+        // eslint-disable-next-line no-param-reassign
+        f.blob = URL.createObjectURL(f);
+        return f;
+      });
       setFileList(newFileList);
     } else {
       notification.warn({
@@ -213,63 +247,89 @@ export default function Uploader(props) {
       // handle on DoUpload
     }
   };
-  const onGridSortEnd = ({ oldIndex, newIndex }) => {
-    const fileListCopy = _.clone(fileList);
-    swapArrayLoc(fileListCopy, oldIndex, newIndex);
-    setFileList(fileListCopy);
-  };
+
   const initialFormValues = {
     lang: ['ku'],
   };
-  const cardStyleGrid = {
-    width: '25%',
-    height: 200,
-    padding: 10,
-    'z-index': '1001',
-  };
-  const Handle = SortableHandle(({ tabIndex }) => (
-    <Button block type="link" size="small" tabIndex={tabIndex}>
-      <DragOutlined className="is-dark-grey-text" />
-    </Button>
-  ));
-  const SortableItem = SortableElement((elementProps) => {
-    const { file, index } = elementProps;
-    const blobUrl = URL.createObjectURL(file);
-    return (
-      <Card.Grid style={cardStyleGrid} hoverable={false}>
-        <Image height={100} width="100%" src={blobUrl} />
-        <p>{file.name}</p>
-        <Button.Group style={{ width: '100%' }}>
-          <Button block type="link" onClick={() => imageEditBtnClicked(file, index)} size="small"><AiOutlineEdit className="is-dark-grey-text" /></Button>
-          <Popconfirm
-            title="ئایا دڵنیای لە سڕینەوەی ئەم وێنەیە ؟"
-            onConfirm={() => deleteConfirmed(file)}
-            okText="بەڵێ"
-            cancelText="نەخێر"
-          >
-            <Button block type="link" size="small"><AiOutlineDelete className="is-danger-text" /></Button>
-          </Popconfirm>
-          <Handle />
-        </Button.Group>
-      </Card.Grid>
-    );
-  });
+  /* GRID  DND LOGIC */
+  const SortableItem = (itemProps) => {
+    const { id, file, index } = itemProps;
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+    } = useSortable({ id });
 
-  const SortableList = SortableContainer((containerPops) => {
-    const { files, ...restProps } = containerPops;
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      padding: 5,
+    };
+    // const blobUrl = URL.createObjectURL(file);
+
     return (
-      <Card gutter={[10, 10]} hoverable={false}>
-        {files.map((file, index) => (
-          <SortableItem
-            key={`item-${file.name}`}
-            index={index}
-            file={file}
-            {...restProps}
-          />
-        ))}
-      </Card>
+      <Col
+        span={4}
+        ref={setNodeRef}
+        style={style}
+      >
+        <div
+          style={{
+            border: '1px solid #e3e3e3',
+            borderRadius: 2,
+            paddingBottom: 5,
+          }}
+        >
+
+          <Image width="100%" src={file.blob} />
+          <p style={{ fontSize: 10, textAlign: 'center' }}>{file.name}</p>
+          <Button.Group style={{ width: '100%' }}>
+            <Button block type="link" onClick={() => imageEditBtnClicked(file, index)} size="small"><AiOutlineEdit className="is-dark-grey-text" /></Button>
+
+            <Popconfirm
+              title="ئایا دڵنیای لە سڕینەوەی ئەم وێنەیە ؟"
+              onConfirm={() => deleteConfirmed(file)}
+              okText="بەڵێ"
+              cancelText="نەخێر"
+            >
+              <Button block type="link" size="small"><AiOutlineDelete className="is-danger-text" /></Button>
+            </Popconfirm>
+            <Button
+              {...attributes}
+              {...listeners}
+              block
+              type="link"
+              size="small"
+            >
+              <DragOutlined className="is-dark-grey-text" />
+            </Button>
+          </Button.Group>
+
+        </div>
+      </Col>
     );
-  });
+  };
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const handleGridDragEnd = (event) => {
+    const { active, over } = event;
+    if (active && over && active.id !== over.id) {
+      setFileList((items) => {
+        const oldIndex = items.findIndex(({ name }) => name === active.id);
+        const newIndex = items.findIndex(({ name }) => name === over.id);
+        const fileListCopy = _.clone(items);
+        swapArrayLoc(fileListCopy, oldIndex, newIndex);
+        return fileListCopy;
+      });
+    }
+  };
 
   return (
     <>
@@ -317,7 +377,7 @@ export default function Uploader(props) {
                   </Checkbox.Group>
                 </Form.Item>
               </Col>
-              <Col span={20}>
+              <Col span={16}>
                 <Button size="middle" htmlType="submit" block loading={uploaderLoading} disabled={fileList.length === 0} type="primary" icon={<CloudUploadOutlined />}>
                   {fileList.length}
                   &nbsp;
@@ -335,6 +395,10 @@ export default function Uploader(props) {
                   <Button block htmlType="button" type="primary" disabled={fileList.length === 0} danger icon={<ClearOutlined />} />
                 </Popconfirm>
               </Col>
+              <Col span={4}>
+
+                <Button block htmlType="button" onClick={toggleViewingMode} type="dashed" icon={viewingMode === 'grid' ? <UnorderedListOutlined /> : <TableOutlined />} />
+              </Col>
             </Row>
           </Form>
         </Col>
@@ -343,7 +407,6 @@ export default function Uploader(props) {
             nodeSelector=".draggble"
             onDragEnd={onDragEnd}
           >
-
             <List className="custom-box-shadow" style={{ padding: 12, borderRadius: 3 }}>
               <List.Item>
                 <Row justify="center" style={{ width: '100%' }}>
@@ -353,7 +416,7 @@ export default function Uploader(props) {
                       <p>وێنە یاخود PDF رابكیشە سەر ئەم بەشە بۆ بارکردن</p>
                       {uploaderLoading
                         ? <Spin size="large" className="upload-container-spin" indicator={<LoadingOutlined />} />
-                        : <AiOutlineCloudUpload style={{ fontSize: '4.5rem', color: '#d9aeed' }} />}
+                        : <AiOutlineCloudUpload style={{ fontSize: '3rem', color: '#d9aeed' }} />}
                       <p style={{ fontSize: 10, color: '#d9aeed' }}>
                         {(maxFiles - fileList.length) <= 0 ? 'گەشیتیت بە سنوری بارکردن بۆ یەک کرداری ناسینەوە '
                           : (
@@ -389,62 +452,64 @@ export default function Uploader(props) {
                   </Col>
                 </Row>
               </List.Item>
-              {/* {fileList.map((file, index) => {
-                const blobUrl = URL.createObjectURL(file);
-                return (
-                  <List.Item
-                    key={file.name}
-                    className="draggble"
-                    actions={[
-                      <Button type="link" onClick={() => imageEditBtnClicked(file, index)} size="small"><AiOutlineEdit className="is-dark-grey-text" /></Button>,
-                      <Popconfirm
-                        title="ئایا دڵنیای لە سڕینەوەی ئەم وێنەیە ؟"
-                        onConfirm={() => deleteConfirmed(file)}
-                        okText="بەڵێ"
-                        cancelText="نەخێر"
+              {
+                viewingMode === 'grid' ? (
+                  <List.Item>
+                    <DndContext
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={handleGridDragEnd}
+                    >
+                      <SortableContext
+                        items={fileList.map(({ name }) => name)}
+                        strategy={rectSortingStrategy}
                       >
-                        <Button type="link" size="small"><AiOutlineDelete className="is-danger-text" /></Button>
-                      </Popconfirm>,
-                    ]}
-                  >
-                    <List.Item.Meta
-                      avatar={<Avatar src={blobUrl} size="large" />}
-                      title={<a href={blobUrl} target="_blank" rel="noreferrer">{file.name}</a>}
-                    />
+                        <Row gutter={[0, 0]} title="لیستی وێنەکان" hoverable={false}>
+                          {fileList.map((file, index) => (
+                            <SortableItem
+                              key={file.name}
+                              id={file.name}
+                              file={file}
+                              index={index}
+                            />
+                          ))}
+                        </Row>
+                      </SortableContext>
+                    </DndContext>
                   </List.Item>
-                );
-              })} */}
+                ) : (
+                  <>
+                    {fileList.map((file, index) => {
+                      const blobUrl = URL.createObjectURL(file);
+                      return (
+                        <List.Item
+                          key={file.name}
+                          className="draggble"
+                          actions={[
+                            <Button type="link" onClick={() => imageEditBtnClicked(file, index)} size="small"><AiOutlineEdit className="is-dark-grey-text" /></Button>,
+                            <Popconfirm
+                              title="ئایا دڵنیای لە سڕینەوەی ئەم وێنەیە ؟"
+                              onConfirm={() => deleteConfirmed(file)}
+                              okText="بەڵێ"
+                              cancelText="نەخێر"
+                            >
+                              <Button type="link" size="small"><AiOutlineDelete className="is-danger-text" /></Button>
+                            </Popconfirm>,
+                          ]}
+                        >
+                          <List.Item.Meta
+                            avatar={<Avatar src={blobUrl} size="large" />}
+                            title={<a href={blobUrl} target="_blank" rel="noreferrer">{file.name}</a>}
+                          />
+                        </List.Item>
+                      );
+                    })}
+                  </>
+                )
+
+              }
             </List>
           </ReactDragListView>
-          <SortableList
-            shouldUseDragHandle
-            useDragHandle
-            axis="xy"
-            files={fileList}
-            onSortEnd={onGridSortEnd}
-          />
-          {/* <Card title="لیستی وێنەکان" hoverable={false}>
-            {fileList.map((file, index) => {
-              const blobUrl = URL.createObjectURL(file);
-              return (
-                <Card.Grid style={cardStyleGrid}>
-                  <Image width="100%" src={blobUrl} />
-                  <Button.Group style={{ width: '100%' }}>
-                    <Button block type="link" onClick={() => imageEditBtnClicked(file, index)} size="small"><AiOutlineEdit className="is-dark-grey-text" /></Button>
-                    <Popconfirm
-                      title="ئایا دڵنیای لە سڕینەوەی ئەم وێنەیە ؟"
-                      onConfirm={() => deleteConfirmed(file)}
-                      okText="بەڵێ"
-                      cancelText="نەخێر"
-                    >
-                      <Button block type="link" size="small"><AiOutlineDelete className="is-danger-text" /></Button>
-                    </Popconfirm>
-                  </Button.Group>
-                </Card.Grid>
-              );
-            })}
-          </Card> */}
-
         </Col>
       </Row>
     </>
