@@ -7,13 +7,14 @@ import {
 } from 'antd';
 import Uploader from './Uploader';
 
-export default function Ocr() {
+export default function Ocr(props) {
+  const { user } = props;
   const [uploaderDrawerVisible, setUploaderDrawerVisible] = useState(false);
   const uploaderDrawerOnClose = () => {
     setUploaderDrawerVisible(false);
   };
-  const onUploaderDone = (formValues, fileList) => {
-    console.log(formValues, fileList);
+  const onUploaderUserDone = () => {
+    // setUploaderDrawerVisible(false);
   };
   return (
     <>
@@ -29,11 +30,16 @@ export default function Ocr() {
       >
         <Row gutter={[10, 10]}>
           <Col span={24}>
-            <Uploader onUserDone={onUploaderDone} />
+            <Uploader user={user} onUserDone={onUploaderUserDone} />
           </Col>
         </Row>
       </Drawer>
-      <Button onClick={() => setUploaderDrawerVisible(true)}>وێنە باربکە</Button>
+      <Row>
+
+        <Col span={24}>
+          <Button onClick={() => setUploaderDrawerVisible(true)}>وێنە باربکە</Button>
+        </Col>
+      </Row>
     </>
   );
 }

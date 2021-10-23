@@ -8,7 +8,7 @@
     --upload-container-active-border: #f2d7ff;
     --upload-container-disabled-bg: white;
     --upload-container-disabled-border: #ffd1d1;
-    --upload-container-inner-spin: #e9b9b9;
+    --upload-container-inner-spin: #696969;
 }
 body{
     overflow-x: hidden;

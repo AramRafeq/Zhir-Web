@@ -15,7 +15,7 @@ class OCRIndex extends React.Component {
   }
 
   render() {
-    const { url } = this.props;
+    const { url, user } = this.props;
     const TabIconStyle = {
       fontSize: 15,
       marginLeft: 5,
@@ -39,7 +39,7 @@ class OCRIndex extends React.Component {
             )}
               key="ocr"
             >
-              <OCR />
+              <OCR user={user} />
             </Tabs.TabPane>
 
           </Tabs>

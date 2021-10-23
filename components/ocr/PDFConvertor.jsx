@@ -77,7 +77,7 @@ export default function PDFConvertor(props) {
               pages.push({
                 pageIndex: currentPage,
                 imageData: ctx.getImageData(0, 0, canvas.width, canvas.height),
-                base64: canvas.toDataURL('image/jpeg', 0.85),
+                base64: canvas.toDataURL('image/jpeg', 1),
               });
               heights.push(height);
               height += canvas.height;

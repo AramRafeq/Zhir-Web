@@ -5,7 +5,9 @@ import { useDropzone } from 'react-dropzone';
 import ReactDragListView from 'react-drag-listview/lib/index';
 import prettyBytes from 'pretty-bytes';
 import _ from 'lodash';
-
+import superagent from 'superagent';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 import {
   Spin, List,
   notification, Avatar,
@@ -93,17 +95,68 @@ const mapErrCodeToMsg = (code) => {
 };
 
 export default function Uploader(props) {
-  const { onUserDone } = props;
+  const { onUserDone, onUploadDone, user } = props;
   const [uploaderLoading, setuploaderLoading] = useState(false);
   const [viewingMode, setViewingMode] = useState('grid'); // possible values grid,list
   const [fileList, setFileList] = useState([]);
   const [PDFfiles, setPDFfiles] = useState([]);
   const [convertedPDFfiles, setConvertedPDFfiles] = useState([]);
   const [editingFile, setEditingFile] = useState(null);
-
+  const initialFormValues = {
+    lang: ['ckb'],
+  };
   const toggleViewingMode = () => {
     const newMode = viewingMode === 'grid' ? 'list' : 'grid';
     setViewingMode(newMode);
+  };
+  const fileToBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+
+  const sendOcrJob = async (values, files) => {
+    setuploaderLoading(true);
+    const bodyFilePromises = files.map(async (f, index) => {
+      const base64 = await fileToBase64(f);
+      const ff = {
+        index,
+        name: f.name,
+        type: f.type,
+        extention: path.extname(f.name).substr(1),
+        base64,
+      };
+      return ff;
+    });
+    const bodyFiles = await Promise.all(bodyFilePromises);
+    const body = {
+      job_id: uuidv4(),
+      group_name: values.group_name !== undefined ? values.group_name : '',
+      lang: (values.lang).join(','),
+      files: bodyFiles,
+    };
+
+    superagent.post(`${process.env.NEXT_PUBLIC_API_URL}/job`)
+      .set('authorization', `Bearer ${user.token}`)
+      .send(body)
+      .end((err, res) => {
+        if (!err) {
+          alert('success');
+          try {
+            onUploadDone(res, values, files);
+          } catch (e) {
+            // handle on DoUpload
+          }
+        } else {
+          notification.error({
+            message: 'هەڵەیەک رویدا',
+            description: 'هەڵەیەک رویدا لەکاتی ناردنی وێنەکان بۆ ڕاژە',
+            placement: 'bottomRight',
+          });
+        }
+        setuploaderLoading(false);
+      });
   };
   const onDropAccepted = (acceptedFiles) => {
     const filteredPDFfiles = acceptedFiles.filter((f) => f.type === 'application/pdf');
@@ -243,15 +296,12 @@ export default function Uploader(props) {
   const onFormFinish = (values) => {
     try {
       onUserDone(values, fileList);
+      sendOcrJob(values, fileList);
     } catch (e) {
       // handle on DoUpload
     }
   };
 
-  const initialFormValues = {
-    lang: ['ku'],
-  };
-  /* GRID  DND LOGIC */
   const SortableItem = (itemProps) => {
     const { id, file, index } = itemProps;
     const {
@@ -349,7 +399,7 @@ export default function Uploader(props) {
                   <Checkbox.Group>
                     <Row gutter={[10, 0]}>
                       <Col span={24}>
-                        <Checkbox value="ku" style={{ lineHeight: '32px' }}>
+                        <Checkbox value="ckb" style={{ lineHeight: '32px' }}>
                           کوردی
                         </Checkbox>
                       </Col>

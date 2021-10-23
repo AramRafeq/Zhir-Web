@@ -25,7 +25,8 @@
     "react-drag-listview": "^0.1.8",
     "react-dropzone": "^11.4.2",
     "react-icons": "^4.3.1",
-    "superagent": "^6.1.0"
+    "superagent": "^6.1.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "babel-plugin-import": "^1.13.3",
