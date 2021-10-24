@@ -43,7 +43,7 @@ const ConfigObject = {
 };
 export default function ImageEditorComponent(props) {
   // const cropperRef = React.createRef();
-  const { file, onFinish } = props;
+  const { file, onFinish, onClose } = props;
   const dataURLtoFile = (dataurl, name) => {
     const arr = dataurl.split(',');
     const mime = arr[0].match(/:(.*?);/)[1];
@@ -65,6 +65,13 @@ export default function ImageEditorComponent(props) {
 
       window.ImageEditorInstance = new window.FilerobotImageEditor(ConfigObject, {
         onComplete: () => false,
+        onClose: () => {
+          try {
+            onClose();
+          } catch (e) {
+            // use less comment
+          }
+        },
         onBeforeComplete: (editorInstance) => {
           const { canvas } = editorInstance;
           const base64 = canvas.toDataURL('image/jpeg', 0.85);

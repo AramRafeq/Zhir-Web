@@ -109,3 +109,10 @@ div[role="alert"],.ant-form-item-extra{
     text-align: right !important;
     direction: initial !important;
 }
+
+.is-round-tag{
+    border-radius: 30px !important;
+}
+.joblist-table th, .joblist-table td{
+    text-align: center !important;
+}

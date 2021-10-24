@@ -142,7 +142,6 @@ export default function Uploader(props) {
       .send(body)
       .end((err, res) => {
         if (!err) {
-          alert('success');
           try {
             onUploadDone(res, values, files);
           } catch (e) {
@@ -156,6 +155,14 @@ export default function Uploader(props) {
           });
         }
         setuploaderLoading(false);
+        setFileList([]);
+        setConvertedPDFfiles([]);
+        setEditingFile(null);
+        notification.success({
+          message: 'نێردرا',
+          description: 'وێنەکان بە سەرکەوتووی نێردران بۆ ژیر',
+          placement: 'bottomRight',
+        });
       });
   };
   const onDropAccepted = (acceptedFiles) => {
@@ -261,6 +268,9 @@ export default function Uploader(props) {
     file.index = index;
     setEditingFile(file);
   };
+  const onImageEditorClose = () => {
+    setEditingFile(null);
+  };
   const imageEditingFinished = (editedFile, originalFile) => {
     setEditingFile(null);
     const fileListCopy = _.clone(fileList);
@@ -336,7 +346,7 @@ export default function Uploader(props) {
           <Image width="100%" src={file.blob} />
           <p style={{ fontSize: 10, textAlign: 'center' }}>{file.name}</p>
           <Button.Group style={{ width: '100%' }}>
-            <Button block type="link" onClick={() => imageEditBtnClicked(file, index)} size="small"><AiOutlineEdit className="is-dark-grey-text" /></Button>
+            <Button block type="link" onClose={onImageEditorClose} onClick={() => imageEditBtnClicked(file, index)} size="small"><AiOutlineEdit className="is-dark-grey-text" /></Button>
 
             <Popconfirm
               title="ئایا دڵنیای لە سڕینەوەی ئەم وێنەیە ؟"
