@@ -8,6 +8,7 @@ import {
   notification,
   Tag,
   Popover,
+  Input,
 } from 'antd';
 import {
   LoadingOutlined,
@@ -20,13 +21,17 @@ import {
 import superagent from 'superagent';
 import dayjs from 'dayjs';
 import Uploader from './Uploader';
+import Modal from '../basic/Modal';
+
 import convertNumberToArabic from '../../helpers/convertNumberToArabic';
 
 export default function Ocr(props) {
   const { user } = props;
   const [uploaderDrawerVisible, setUploaderDrawerVisible] = useState(false);
   const [jobList, setJobList] = useState([]);
-
+  const [loadedTextFile, setLoadedTextFile] = useState('');
+  const [textLoading, setTextLoading] = useState(false);
+  const textModalRef = React.createRef();
   const faces = {
     1: '😞',
     2: '😐',
@@ -35,16 +40,23 @@ export default function Ocr(props) {
     5: '😄',
   };
   const loadTextFileContent = (url) => {
+    setTextLoading(true);
     superagent
       .get(url)
       .end((err, info) => {
-        console.log(info.text);
+        if (!err) {
+          setLoadedTextFile(info.text);
+          setTextLoading(false);
+        } else {
+          notification.error({
+            message: 'هەڵە ڕویدا',
+            description: 'هەڵەیەک ڕویدا لەکاتی وەرگرتنەوەی ناوەڕۆکی نووسین',
+            placement: 'bottomRight',
+          });
+        }
       });
   };
   const uploaderDrawerOnClose = () => {
-    setUploaderDrawerVisible(false);
-  };
-  const onUploaderUserDone = () => {
     setUploaderDrawerVisible(false);
   };
   const loadJobList = (limit = 120, offset = 0, q = '') => {
@@ -66,9 +78,24 @@ export default function Ocr(props) {
         }
       });
   };
+
+  const onUploadDone = () => {
+    loadJobList();
+    setUploaderDrawerVisible(false);
+  };
+
   useEffect(() => {
     loadJobList();
+    const interval = setInterval(() => {
+      loadJobList();
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
+  useEffect(() => {
+    if (textModalRef.current && loadedTextFile !== '') {
+      textModalRef.current.click();
+    }
+  }, [loadedTextFile]);
 
   const tableColumns = [
     {
@@ -81,7 +108,7 @@ export default function Ocr(props) {
       title: 'ژمارەی وێنەکان',
       dataIndex: 'page_count',
       key: 'page_count',
-      width: '13%',
+      width: '17%',
       render: (v, r) => {
         let returnObject = (<></>);
         if ((v - r.paid_page_count) > 0) {
@@ -115,7 +142,7 @@ export default function Ocr(props) {
       title: 'لە ڕێکەوتی',
       dataIndex: 'created_at',
       key: 'created_at',
-      width: '15%',
+      width: '20%',
       render: (v) => convertNumberToArabic(dayjs(v).format('YYYY-MM-DD')),
     },
     {
@@ -159,34 +186,25 @@ export default function Ocr(props) {
       title: 'کردارەکان',
       dataIndex: 'id',
       key: 'id',
+      width: '30%',
       render: (v, r) => {
-        const styles = {
-          // word: { background: 'rgb(181 222 255)', color: 'rgb(82 124 153)',
-          // borderColor: 'rgb(82 124 153)' },
-          // pdf: { background: 'rgb(255 43 90)', color: 'white', borderColor: 'rgb(175 29 61);' },
-          // text: { background: '#f6ffed', color: '#47a51e', borderColor: '#47a51e' },
-        };
-        styles.word = {};
-        styles.pdf = {};
-        styles.text = {};
-
         const msWord = (
-          <Button size="small" style={styles.word} icon={<FileWordOutlined />} block disabled={r.status !== 'completed'} href={r.status === 'completed' ? `${process.env.NEXT_PUBLIC_API_URL}/assets/done/${user.id}/${v}/result.docx` : undefined}>
+          <Button loading={textLoading} type="dashed" icon={<FileWordOutlined />} target="_blank" block disabled={r.status !== 'completed'} href={r.status === 'completed' ? `${process.env.NEXT_PUBLIC_API_URL}/assets/done/${user.id}/${v}/result.docx` : undefined}>
             MS Word
           </Button>
         );
         const pdf = (
-          <Button style={styles.pdf} size="small" icon={<FilePdfOutlined />} block disabled={r.status !== 'completed'} href={r.status === 'completed' ? `${process.env.NEXT_PUBLIC_API_URL}/assets/done/${user.id}/${v}/result.pdf` : undefined}>
+          <Button loading={textLoading} type="dashed" icon={<FilePdfOutlined />} target="_blank" block disabled={r.status !== 'completed'} href={r.status === 'completed' ? `${process.env.NEXT_PUBLIC_API_URL}/assets/done/${user.id}/${v}/result.pdf` : undefined}>
             PDF
           </Button>
         );
         const text = (
-          <Button size="small" style={styles.text} icon={<FileTextOutlined />} block disabled={r.status !== 'completed'} onClick={loadTextFileContent(`${process.env.NEXT_PUBLIC_API_URL}/assets/done/${user.id}/${v}/result.txt`)}>
+          <Button loading={textLoading} type="dashed" icon={<FileTextOutlined />} block disabled={r.status !== 'completed'} onClick={() => loadTextFileContent(`${process.env.NEXT_PUBLIC_API_URL}/assets/done/${user.id}/${v}/result.txt`)}>
             دەق
           </Button>
         );
         return (
-          <Button.Group block disabled={r.status !== 'completed'} size="small">
+          <Button.Group style={{ width: '100%' }} disabled={r.status !== 'completed'}>
             {text}
             {msWord}
             {pdf}
@@ -196,9 +214,24 @@ export default function Ocr(props) {
     },
 
   ];
-
+  const modalEvents = {};
   return (
     <>
+      <Modal
+        btnRef={textModalRef}
+        size="modal-lg"
+        header="ناوەڕۆکی دەرهێندراو"
+        onMount={(show, close) => {
+          modalEvents.show = show;
+          modalEvents.close = close;
+        }}
+        onCancel={() => {
+          modalEvents.close();
+          setLoadedTextFile('');
+        }}
+      >
+        <Input.TextArea rows={15} readOnly value={loadedTextFile} />
+      </Modal>
       <Drawer
         zIndex={10}
         visible={uploaderDrawerVisible}
@@ -210,17 +243,21 @@ export default function Ocr(props) {
       >
         <Row gutter={[10, 10]}>
           <Col span={24}>
-            <Uploader user={user} onUserDone={onUploaderUserDone} />
+            <Uploader user={user} onUploadDone={onUploadDone} />
           </Col>
         </Row>
       </Drawer>
       <Row gutter={[10, 10]}>
 
-        <Col span={24}>
-          <Button type="primary" icon={<UploadOutlined />} onClick={() => setUploaderDrawerVisible(true)}>وێنە باربکە</Button>
+        <Col span={7}>
+          <Input placeholder="بە کۆد بگەڕێ" size="large" style={{ width: '100%' }} />
+        </Col>
+        <Col offset={12} span={5}>
+          <Button block size="large" type="primary" icon={<UploadOutlined />} onClick={() => setUploaderDrawerVisible(true)}>وێنە باربکە</Button>
         </Col>
         <Col span={24}>
           <Table
+            bordered
             size="middle"
             className="joblist-table"
             pagination={{

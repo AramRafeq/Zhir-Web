@@ -305,8 +305,12 @@ export default function Uploader(props) {
   };
   const onFormFinish = (values) => {
     try {
-      onUserDone(values, fileList);
       sendOcrJob(values, fileList);
+    } catch (e) {
+      // handle on DoUpload
+    }
+    try {
+      onUserDone(values, fileList);
     } catch (e) {
       // handle on DoUpload
     }
@@ -396,7 +400,7 @@ export default function Uploader(props) {
       <ImageEditor file={editingFile} onFinish={imageEditingFinished} />
 
       <Row gutter={[30, 10]}>
-        <Col span={8} style={{ position: 'fixed' }}>
+        <Col span={6} style={{ position: 'fixed' }}>
           <Form className="custom-box-shadow" style={{ width: '100%', padding: 12, borderRadius: 3 }} layout="vertical" initialValues={initialFormValues} onFinish={onFormFinish}>
             <Row gutter={[10, 0]} align="middle">
               <Col span={24}>
@@ -424,7 +428,7 @@ export default function Uploader(props) {
                         </Checkbox>
                       </Col>
                       <Col span={24}>
-                        <Checkbox value="en" style={{ lineHeight: '32px' }}>
+                        <Checkbox value="eng" style={{ lineHeight: '32px' }}>
                           ئینگلیزی
                         </Checkbox>
                       </Col>
@@ -452,17 +456,17 @@ export default function Uploader(props) {
                   cancelText="نەخێر"
                   disabled={fileList.length === 0}
                 >
-                  <Button block htmlType="button" type="primary" disabled={fileList.length === 0} danger icon={<ClearOutlined />} />
+                  <Button block htmlType="button" type="primary" disabled={(fileList.length === 0 || uploaderLoading)} danger icon={<ClearOutlined />} />
                 </Popconfirm>
               </Col>
               <Col span={4}>
 
-                <Button block htmlType="button" onClick={toggleViewingMode} type="dashed" icon={viewingMode === 'grid' ? <UnorderedListOutlined /> : <TableOutlined />} />
+                <Button block htmlType="button" onClick={toggleViewingMode} type="dashed" disabled={(fileList.length === 0 || uploaderLoading)} icon={viewingMode === 'grid' ? <UnorderedListOutlined /> : <TableOutlined />} />
               </Col>
             </Row>
           </Form>
         </Col>
-        <Col span={16} offset={8}>
+        <Col span={18} offset={6}>
           <ReactDragListView
             nodeSelector=".draggble"
             onDragEnd={onDragEnd}

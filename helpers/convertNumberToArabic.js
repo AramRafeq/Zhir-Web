@@ -1,4 +1,4 @@
-export default (rawNumber) => {
+export default function convertToArabic(rawNumber) {
   const number = `${rawNumber}`;
   let charIndex = 0;
   let NumericArabic = '';
@@ -58,4 +58,4 @@ export default (rawNumber) => {
   }
 
   return NumericArabic;
-};
+}
