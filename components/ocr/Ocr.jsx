@@ -30,7 +30,9 @@ export default function Ocr(props) {
   const [uploaderDrawerVisible, setUploaderDrawerVisible] = useState(false);
   const [jobList, setJobList] = useState([]);
   const [loadedTextFile, setLoadedTextFile] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [textLoading, setTextLoading] = useState(false);
+  const [jobsLoading, setJobsLoading] = useState(false);
   const textModalRef = React.createRef();
   const faces = {
     1: '😞',
@@ -56,10 +58,12 @@ export default function Ocr(props) {
         }
       });
   };
+
   const uploaderDrawerOnClose = () => {
     setUploaderDrawerVisible(false);
   };
   const loadJobList = (limit = 120, offset = 0, q = '') => {
+    setJobsLoading(true);
     superagent.get(`${process.env.NEXT_PUBLIC_API_URL}/job/list`)
       .set('authorization', `Bearer ${user.token}`)
       .query({
@@ -76,6 +80,7 @@ export default function Ocr(props) {
             placement: 'bottomRight',
           });
         }
+        setJobsLoading(false);
       });
   };
 
@@ -84,18 +89,25 @@ export default function Ocr(props) {
     setUploaderDrawerVisible(false);
   };
 
+  const searchQuryInputChanged = (e) => {
+    const searchTerm = e.target.value;
+    setSearchQuery(searchTerm);
+  };
   useEffect(() => {
     loadJobList();
-    const interval = setInterval(() => {
-      loadJobList();
-    }, 5000);
-    return () => clearInterval(interval);
+    // const interval = setInterval(() => {
+    //   loadJobList();
+    // }, 5000);
+    // return () => clearInterval(interval);
   }, []);
   useEffect(() => {
     if (textModalRef.current && loadedTextFile !== '') {
       textModalRef.current.click();
     }
   }, [loadedTextFile]);
+  useEffect(() => {
+    loadJobList(120, 0, searchQuery);
+  }, [searchQuery]);
 
   const tableColumns = [
     {
@@ -250,9 +262,12 @@ export default function Ocr(props) {
       <Row gutter={[10, 10]}>
 
         <Col span={7}>
-          <Input placeholder="بە کۆد بگەڕێ" size="large" style={{ width: '100%' }} />
+          <Input value={searchQuery} onChange={searchQuryInputChanged} placeholder="بە کۆد بگەڕێ" size="large" style={{ width: '100%' }} />
         </Col>
-        <Col offset={12} span={5}>
+        <Col span={3} style={{ paddingTop: 10 }}>
+          <LoadingOutlined spin style={{ display: jobsLoading ? 'initial' : 'none' }} />
+        </Col>
+        <Col offset={9} span={5}>
           <Button block size="large" type="primary" icon={<UploadOutlined />} onClick={() => setUploaderDrawerVisible(true)}>وێنە باربکە</Button>
         </Col>
         <Col span={24}>
