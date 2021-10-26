@@ -117,7 +117,7 @@ export default function PDFConvertor(props) {
 
   if (process.browser) {
     return (
-      <>
+      <div className="animate__animated animate__fadeIn">
         <Row
           gutter={[10, 0]}
           justify="center"
@@ -161,7 +161,7 @@ export default function PDFConvertor(props) {
             </span>
           </Col>
         </Row>
-      </>
+      </div>
     );
   }
   return <h1>Hello Server Inside PDF Convertor</h1>;

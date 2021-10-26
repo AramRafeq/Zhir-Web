@@ -30,6 +30,8 @@ import convertNumberToArabic from '../../helpers/convertNumberToArabic';
 
 export default function Ocr(props) {
   const { user } = props;
+  const limit = 120;
+  const offset = 0;
   const [uploaderDrawerVisible, setUploaderDrawerVisible] = useState(false);
   const [jobList, setJobList] = useState([]);
   const [loadedTextFile, setLoadedTextFile] = useState('');
@@ -65,14 +67,14 @@ export default function Ocr(props) {
   const uploaderDrawerOnClose = () => {
     setUploaderDrawerVisible(false);
   };
-  const loadJobList = (limit = 120, offset = 0, q = '') => {
+  const loadJobList = (l = 120, o = 0) => {
     setJobsLoading(true);
     superagent.get(`${process.env.NEXT_PUBLIC_API_URL}/job/list`)
       .set('authorization', `Bearer ${user.token}`)
       .query({
-        limit,
-        offset,
-        q,
+        limit: l,
+        offset: o,
+        q: searchQuery,
       }).end((err, res) => {
         if (!err) {
           setJobList(res.body);
@@ -88,7 +90,7 @@ export default function Ocr(props) {
   };
 
   const onUploadDone = () => {
-    loadJobList();
+    loadJobList(limit, offset);
     setUploaderDrawerVisible(false);
   };
 
@@ -97,20 +99,17 @@ export default function Ocr(props) {
     setSearchQuery(searchTerm);
   }, 400);
   useEffect(() => {
-    loadJobList();
+    loadJobList(limit, offset);
     const interval = setInterval(() => {
-      loadJobList();
+      loadJobList(limit, offset);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [searchQuery]);
   useEffect(() => {
     if (textModalRef.current && loadedTextFile !== '') {
       textModalRef.current.click();
     }
   }, [loadedTextFile]);
-  useEffect(() => {
-    loadJobList(120, 0, searchQuery);
-  }, [searchQuery]);
 
   const tableColumns = [
     {
@@ -280,6 +279,7 @@ export default function Ocr(props) {
             bordered
             size="small"
             className="joblist-table"
+            rowClassName=" animate__animated animate__fadeIn"
             pagination={{
               pageSize: 120,
               position: ['none', 'none'],
