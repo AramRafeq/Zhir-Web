@@ -19,8 +19,11 @@ import {
   UploadOutlined,
 } from '@ant-design/icons';
 import superagent from 'superagent';
+import classnames from 'classnames';
+import debounce from 'lodash/debounce';
 import dayjs from 'dayjs';
 import Uploader from './Uploader';
+import RateJob from './RateJob';
 import Modal from '../basic/Modal';
 
 import convertNumberToArabic from '../../helpers/convertNumberToArabic';
@@ -89,16 +92,16 @@ export default function Ocr(props) {
     setUploaderDrawerVisible(false);
   };
 
-  const searchQuryInputChanged = (e) => {
+  const searchQuryInputChanged = debounce((e) => {
     const searchTerm = e.target.value;
     setSearchQuery(searchTerm);
-  };
+  }, 400);
   useEffect(() => {
     loadJobList();
-    // const interval = setInterval(() => {
-    //   loadJobList();
-    // }, 5000);
-    // return () => clearInterval(interval);
+    const interval = setInterval(() => {
+      loadJobList();
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
   useEffect(() => {
     if (textModalRef.current && loadedTextFile !== '') {
@@ -182,7 +185,7 @@ export default function Ocr(props) {
             );
           } else {
             returnObject = (
-              <Popover content={<h1>hello wolrd</h1>} trigger="click">
+              <Popover content={<RateJob user={user} jobId={r.id} />} trigger="click">
                 <Tag style={{ cursor: 'pointer' }} className="is-round-tag" color="green" icon={<StarOutlined />}>تەواوبوو</Tag>
               </Popover>
             );
@@ -262,10 +265,12 @@ export default function Ocr(props) {
       <Row gutter={[10, 10]}>
 
         <Col span={7}>
-          <Input value={searchQuery} onChange={searchQuryInputChanged} placeholder="بە کۆد بگەڕێ" size="large" style={{ width: '100%' }} />
+          <Input onChange={searchQuryInputChanged} placeholder="بە کۆد بگەڕێ" size="large" style={{ width: '100%' }} />
         </Col>
         <Col span={3} style={{ paddingTop: 10 }}>
-          <LoadingOutlined spin style={{ display: jobsLoading ? 'initial' : 'none' }} />
+          <span className={classnames({ 'animate__animated animate__fadeInLeft': jobsLoading, 'animate__animated animate__fadeOutLeft': !jobsLoading })}>
+            <LoadingOutlined spin />
+          </span>
         </Col>
         <Col offset={9} span={5}>
           <Button block size="large" type="primary" icon={<UploadOutlined />} onClick={() => setUploaderDrawerVisible(true)}>وێنە باربکە</Button>
@@ -273,7 +278,7 @@ export default function Ocr(props) {
         <Col span={24}>
           <Table
             bordered
-            size="middle"
+            size="small"
             className="joblist-table"
             pagination={{
               pageSize: 120,

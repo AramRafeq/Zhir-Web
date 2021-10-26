@@ -480,8 +480,8 @@ export default function Uploader(props) {
                       <p>وێنە یاخود PDF رابكیشە سەر ئەم بەشە بۆ بارکردن</p>
                       {uploaderLoading
                         ? <Spin size="large" className="upload-container-spin" indicator={<LoadingOutlined />} />
-                        : <AiOutlineCloudUpload style={{ fontSize: '3rem', color: '#d9aeed' }} />}
-                      <p style={{ fontSize: 10, color: '#d9aeed' }}>
+                        : <AiOutlineCloudUpload className="is-primary-text" style={{ fontSize: '3rem' }} />}
+                      <p style={{ fontSize: 10 }} className="is-primary-text">
                         {(maxFiles - fileList.length) <= 0 ? 'گەشیتیت بە سنوری بارکردن بۆ یەک کرداری ناسینەوە '
                           : (
                             <>

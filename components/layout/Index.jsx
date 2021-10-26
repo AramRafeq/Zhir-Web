@@ -73,9 +73,7 @@ class Index extends React.Component {
                         <p style={{
                           color: '#d1d2d3', width: '100%', textAlign: 'center', marginBottom: '2rem',
                         }}
-                        >
-                          کانگەی داهێنانی زمانی کوردی
-                        </p>
+                        />
 
                       </>
                     ) : null
@@ -84,7 +82,7 @@ class Index extends React.Component {
               </Col>
             </Row>
           </div>
-          <Menu theme="dark" mode="vertical" defaultSelectedKeys={[url]}>
+          <Menu style={{ fontWeight: 200 }} theme="dark" mode="vertical" defaultSelectedKeys={[url]}>
             <Menu.Item icon={<MdDocumentScanner className="custom-icon" />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="/app/ocr">
               <a href="/app/ocr">ناسینەوەی وێنە</a>
             </Menu.Item>

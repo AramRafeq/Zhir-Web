@@ -1,11 +1,10 @@
 import React from 'react';
 import { withIronSession } from 'next-iron-session';
-import { AiFillApi, AiFillProfile } from 'react-icons/ai';
+import { AiFillProfile } from 'react-icons/ai';
 import { Tabs } from 'antd';
 import authGuard from '../../helpers/authGuard';
 import Layout from '../../components/layout/Index';
 import ProfileForm from '../../components/setting/Profile';
-import ForDevelopers from '../../components/setting/ForDevelopers';
 
 class Profile extends React.Component {
   constructor() {
@@ -37,17 +36,6 @@ class Profile extends React.Component {
             key="profile"
           >
             <ProfileForm user={user} />
-          </Tabs.TabPane>
-          <Tabs.TabPane
-            tab={(
-              <span>
-                <AiFillApi style={TabIconStyle} />
-                بۆ گەشەپێدەران
-              </span>
-            )}
-            key="for-devs"
-          >
-            <ForDevelopers user={user} />
           </Tabs.TabPane>
         </Tabs>
       </Layout>

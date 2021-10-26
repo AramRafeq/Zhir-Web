@@ -27,6 +27,10 @@ export default class MyDocument extends Document {
             }}
           />
           <script src="https://cdn.scaleflex.it/plugins/filerobot-image-editor/3.12.17/filerobot-image-editor.min.js" />
+          <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+          />
         </Head>
         <body>
           <Main />

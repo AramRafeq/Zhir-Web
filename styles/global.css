@@ -54,6 +54,7 @@ div[role="alert"],.ant-form-item-extra{
     background-color: var(--primary-color) !important;
 }
 
+
 .logo{
     width: 100%;
 }
@@ -115,4 +116,8 @@ div[role="alert"],.ant-form-item-extra{
 }
 .joblist-table th, .joblist-table td{
     text-align: center !important;
+}
+
+.ant-layout-sider-trigger{
+    background:none !important;
 }

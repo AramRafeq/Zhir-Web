@@ -30,7 +30,6 @@ export default class ForDevelopers extends React.Component {
     const initialFormValues = {
       api_key: user.api_key,
       monthly_recharge: user.monthly_recharge,
-
     };
     return (
       <Row justify="center" style={{ height: `${windowHeight}px` }}>
@@ -70,11 +69,13 @@ export default class ForDevelopers extends React.Component {
                           ژیر بتوانێت بانگی بەستەرێکی وەک
                           localhost بکات کە لەسەر کۆمپیتەری کەسیە دەبێت خزمەتگوزاریەکی وەک
                           ngrok.io بەکاربهێنیت و ئەو بەستەرەی ئەو پێتی دەدات لە پرۆفایلەکەت دابنێیت
+                          &nbsp;
                           <a href="https://blog.theodo.com/2016/06/expose-your-local-environment-to-the-world-with-ngrok/" alt="how to use ngrok">
                             دەتوانیت سوود لەم بەستەرە وەربگریت
                           </a>
-
+                          &nbsp;
                           بە کرتەکردن
+                          &nbsp;
                           <a href="https://www.getpostman.com/collections/f49f67137ca6c4319897" target="_blank" rel="noreferrer">
                             لەسەر ئەم بەسەتەرە دەتوانیت
                             کۆلێکشنی پۆستمان وەبگریت بە فۆرماتی JSON

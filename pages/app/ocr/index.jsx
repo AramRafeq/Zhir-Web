@@ -3,9 +3,12 @@ import Head from 'next/head';
 import { withIronSession } from 'next-iron-session';
 import { Tabs } from 'antd';
 import { MdDocumentScanner } from 'react-icons/md';
+import { AiFillApi } from 'react-icons/ai';
+
 import authGuard from '../../../helpers/authGuard';
 import Layout from '../../../components/layout/Index';
 import OCR from '../../../components/ocr/Ocr';
+import ForDevelopers from '../../../components/ocr/ForDevelopers';
 
 class OCRIndex extends React.Component {
   constructor() {
@@ -40,6 +43,19 @@ class OCRIndex extends React.Component {
               key="ocr"
             >
               <OCR user={user} />
+            </Tabs.TabPane>
+            <Tabs.TabPane
+              tab={(
+                <span>
+                  <AiFillApi style={TabIconStyle} />
+                  API
+
+                  بۆ گەشەپێدەران
+                </span>
+            )}
+              key="for-devs"
+            >
+              <ForDevelopers user={user} />
             </Tabs.TabPane>
 
           </Tabs>
