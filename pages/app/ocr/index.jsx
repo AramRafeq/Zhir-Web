@@ -3,12 +3,15 @@ import Head from 'next/head';
 import { withIronSession } from 'next-iron-session';
 import { Tabs } from 'antd';
 import { MdDocumentScanner } from 'react-icons/md';
-import { AiFillApi } from 'react-icons/ai';
+import { AiFillApi, AiFillQuestionCircle } from 'react-icons/ai';
+import { GoBook } from 'react-icons/go';
 
 import authGuard from '../../../helpers/authGuard';
 import Layout from '../../../components/layout/Index';
 import OCR from '../../../components/ocr/Ocr';
 import ForDevelopers from '../../../components/ocr/ForDevelopers';
+import Faq from '../../../components/ocr/Faq.jsx';
+import Guideline from '../../../components/ocr/Guideline';
 
 class OCRIndex extends React.Component {
   constructor() {
@@ -37,13 +40,37 @@ class OCRIndex extends React.Component {
               tab={(
                 <span>
                   <MdDocumentScanner style={TabIconStyle} />
-                  دەرهێنانی نووسین
+                  دەرهێنانی نووسین / OCR
                 </span>
             )}
               key="ocr"
             >
               <OCR user={user} />
             </Tabs.TabPane>
+            <Tabs.TabPane
+              tab={(
+                <span>
+                  <GoBook style={TabIconStyle} />
+                  ڕێنمایەکانی بەکارهێنان
+                </span>
+            )}
+              key="ocr-guideline"
+            >
+              <Guideline />
+            </Tabs.TabPane>
+            <Tabs.TabPane
+              tab={(
+                <span>
+                  <AiFillQuestionCircle style={TabIconStyle} />
+                  پرسیارەکان
+                  دەربارەی OCR
+                </span>
+            )}
+              key="ocr-faq"
+            >
+              <Faq />
+            </Tabs.TabPane>
+
             <Tabs.TabPane
               tab={(
                 <span>
