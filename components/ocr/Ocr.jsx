@@ -103,7 +103,9 @@ export default function Ocr(props) {
     const interval = setInterval(() => {
       loadJobList(limit, offset);
     }, 5000);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+    };
   }, [searchQuery]);
   useEffect(() => {
     if (textModalRef.current && loadedTextFile !== '') {

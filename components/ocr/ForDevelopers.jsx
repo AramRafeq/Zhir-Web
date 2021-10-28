@@ -51,7 +51,7 @@ export default class ForDevelopers extends React.Component {
                       </Form.Item>
                     </Col>
                     <Col span={24}>
-                      <Typography.Title>ڕێنمایی بەکارهێنان</Typography.Title>
+                      <Typography.Title>ڕێنمایی بەکارهێنانی API</Typography.Title>
 
                       <List>
                         <List.Item>

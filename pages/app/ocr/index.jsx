@@ -2,7 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import { withIronSession } from 'next-iron-session';
 import { Tabs } from 'antd';
-import { MdDocumentScanner } from 'react-icons/md';
+import { MdDocumentScanner, MdAttachMoney } from 'react-icons/md';
 import { AiFillApi, AiFillQuestionCircle } from 'react-icons/ai';
 import { GoBook } from 'react-icons/go';
 
@@ -12,6 +12,7 @@ import OCR from '../../../components/ocr/Ocr';
 import ForDevelopers from '../../../components/ocr/ForDevelopers';
 import Faq from '../../../components/ocr/Faq.jsx';
 import Guideline from '../../../components/ocr/Guideline';
+import Balance from '../../../components/ocr/Balance';
 
 class OCRIndex extends React.Component {
   constructor() {
@@ -35,7 +36,7 @@ class OCRIndex extends React.Component {
         <Layout
           url={url}
         >
-          <Tabs tabPosition="top" defaultActiveKey="ocr">
+          <Tabs animated destroyInactiveTabPane tabPosition="top" defaultActiveKey="ocr">
             <Tabs.TabPane
               tab={(
                 <span>
@@ -70,7 +71,17 @@ class OCRIndex extends React.Component {
             >
               <Faq />
             </Tabs.TabPane>
-
+            <Tabs.TabPane
+              tab={(
+                <span>
+                  <MdAttachMoney style={TabIconStyle} />
+                  باڵانس
+                </span>
+            )}
+              key="balance"
+            >
+              <Balance user={user} />
+            </Tabs.TabPane>
             <Tabs.TabPane
               tab={(
                 <span>
