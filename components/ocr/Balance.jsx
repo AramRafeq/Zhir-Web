@@ -87,7 +87,7 @@ export default function Balance(props) {
     <>
       <Modal
         btnRef={modalRef}
-        size="modal-md"
+        size="modal-lg"
         header={null}
         // header="پڕکردنەوەی باڵانس"
       >

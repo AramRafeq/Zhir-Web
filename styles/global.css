@@ -121,3 +121,12 @@ div[role="alert"],.ant-form-item-extra{
 .ant-layout-sider-trigger{
     background:none !important;
 }
+
+.price-table{
+    
+}
+.price-table-primary-bg .ant-card-head{
+    background: var(--primary-color);
+    
+}
+
