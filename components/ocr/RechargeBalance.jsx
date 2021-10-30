@@ -4,14 +4,14 @@ import {
   List,
   Card,
   Button,
+  Alert,
 } from 'antd';
-import { QrcodeOutlined } from '@ant-design/icons';
-import superagent from 'superagent';
-import dayjs from 'dayjs';
+import Modal from '../basic/Modal';
 
 export default function Balance(props) {
   const { user } = props;
-  const [pageIndex, setPageIndex] = useState(0);
+  const qrCodeModalRef = React.createRef();
+  const [pageIndex, setPageIndex] = useState(-1);
   const fastpayMob = '964 750 766 5935';
   const pages = [20, 50, 100, 500, 1000];
   const labels = ['🎁 دیاری ', '٥٠ پەڕە', '١٠٠ پەڕە', '٥٠٠ پەڕە ', '١،٠٠٠ پەڕە'];
@@ -24,75 +24,112 @@ export default function Balance(props) {
     '/assets/fastpay-qrcodes/50000IQD.png',
   ];
   const currency = 'iqd'; // it could take iqd,rial
-  const labelStyle = { fontSize: 15 };
-  const marks = {
+  const showFastpayBarcode = (pI = 0) => {
+    setPageIndex(pI);
+  };
+  useEffect(() => {
+    if (pageIndex !== -1) {
+      qrCodeModalRef.current.click();
+    }
+  }, [pageIndex]);
 
-    0: {
-      style: labelStyle,
-      label: <span>🎁 دیاری </span>,
-    },
-    1: {
-      style: labelStyle,
-      label: <span>٥٠ پەڕە</span>,
-    },
-    2: {
-      style: labelStyle,
-      label: <span>١٠٠ پەڕە</span>,
-    },
-    3: {
-      style: labelStyle,
-      label: <span>٥٠٠ پەڕە </span>,
-    },
-    4: {
-      style: labelStyle,
-      label: <span>١،٠٠٠ پەڕە</span>,
-    },
-  };
-  const onDrawerClose = () => {
-    setDrawerVisible(false);
-  };
-  const showBalanceDrawer = () => {
-    setDrawerVisible(true);
-  };
-  const onTrackChange = (index) => {
-    setPageIndex(index);
-  };
   return (
     <>
-      <Row gutter={[15, 15]} style={{ padding: 20 }}>
+      <Modal btnRef={qrCodeModalRef} size="modal-md">
+        <Row justify="center" style={{ marginTop: 20 }}>
+          <Col span={24}>
+            <Alert
+              message={(
+                <p style={{ fontSize: 15 }}>
+                  گەر دڵنیای لە کڕینی
+                  {' '}
+                  <u>{labels[pageIndex]}</u>
+                  {' '}
+                  بە بڕی
+                  &nbsp;
+                  <u>
+                    {' '}
+                    {prices[pageIndex]}
+                  </u>
+                  &nbsp;
+                  ئەم
+                  بارکۆدەی خوارەوە بە فاستپەی (
+                  <img src="/assets/fastpay.png" width="60" alt="fastpay" />
+                  ) سکان بکە
+                </p>
+            )}
+              type="warning"
+              style={{ border: 'none' }}
+            />
+          </Col>
+          <Col style={{ textAlign: 'center' }} span={24}>
+            <img width="40%" src={QRCodeUrls[pageIndex]} alt="fastpay" />
+          </Col>
+          <Col style={{ textAlign: 'center' }} span={24}>
+            <Alert
+              type="info"
+              style={{ border: 'none' }}
+              message={(
+                <List size="small">
+                  <List.Item>
+                    ئاگاداری ژمارەی مۆبایلی هەژمارەکەت بە دەبێت هەمان ئەو
+                    ژمارەی فاستپەی بێت (
+                    <a target="_blank" href="/app/profile"> نوێکردنەوەی ژمارەی مۆبایل</a>
+                    )
+                  </List.Item>
+                  <List.Item>
+                    لە ماوەی کەمتر لە ٢ کاتژمێر هەژمارەکەت پڕ
+                    دەکرێتەوە ئەگەر لەو کاتە زیاتر بوو تکایە پەیوەندی بکە
+                  </List.Item>
+                  <List.Item>
+                    لەکاتی بوونی هەر هەڵەیەک پەیوەندی بکەن بە ژمارە
+                    <bdi className="is-ltr">
 
-        {/* <Col span={6}>
+                      +964 750 766 5935
+                    </bdi>
+                  </List.Item>
+                </List>
+              )}
+            />
+
+          </Col>
+
+        </Row>
+      </Modal>
+      <Row gutter={[15, 15]} style={{ padding: 20 }}>
+        <Col span={6}>
           <Card
-            className="custom-box-shadow price-table price-table-primary-bg"
-            title={<h2 style={{ textAlign: 'center', color: 'white' }}>خۆڕایی</h2>}
+            className="custom-box-shadow price-table "
+            title={<h2 className="is-primary-text" style={{ textAlign: 'center' }}>٢٠ پەڕە</h2>}
           >
             <Card.Meta description="مانگانە ٢٠ پەڕە بەخۆڕایی وەردەگریت" />
             <Row gutter={[0, 10]} style={{ marginTop: 10 }}>
               <Col span={24}>
-                <List bordered>
+                <List>
                   <List.Item>وەرگرتنی ٢٠ پەڕە مانگانە</List.Item>
                   <List.Item>توانای بەکارهێنانی ژیر OCR بە هەموو توانایەکانیەوە</List.Item>
                   <List.Item>بەکارهێنانی API بەردەرستە</List.Item>
                 </List>
               </Col>
               <Col span={24}>
-                <Button size="large" type="dashed" block>
-                  <img src="/assets/fastpay.png" width="50" alt="" />
+                <Button size="large" type="dashed" block disabled>
+                  {/* <img src="/assets/fastpay.png" width="50" alt="" /> */}
+                  بەخۆڕاییە
                 </Button>
               </Col>
             </Row>
           </Card>
-        </Col> */}
-        <Col span={6}>
+        </Col>
+        <Col span={6} style={{ display: 'none' }}>
           <Card
-            className="custom-box-shadow price-table price-table-primary-bg"
-            title={<h2 style={{ textAlign: 'center', color: 'white' }}>خۆڕایی</h2>}
+            className="custom-box-shadow price-table "
+            title={<h2 style={{ textAlign: 'center' }}>٥٠ پەڕە</h2>}
           >
-            <Card.Meta description="مانگانە ٢٠ پەڕە بەخۆڕایی وەردەگریت" />
+            <Card.Meta description={<span>&nbsp;</span>} />
             <Row gutter={[0, 10]} style={{ marginTop: 10 }}>
               <Col span={24}>
-                <List bordered>
-                  <List.Item>وەرگرتنی ٢٠ پەڕە مانگانە</List.Item>
+                <List>
+                  <List.Item>٥٠ پەڕ بکڕە تەنها بە ٥،٠٠٠ دینار</List.Item>
                   <List.Item>توانای بەکارهێنانی ژیر OCR بە هەموو توانایەکانیەوە</List.Item>
                   <List.Item>بەکارهێنانی API بەردەرستە</List.Item>
                 </List>
@@ -108,19 +145,19 @@ export default function Balance(props) {
         <Col span={6}>
           <Card
             className="custom-box-shadow price-table price-table-primary-bg"
-            title={<h2 style={{ textAlign: 'center', color: 'white' }}>خۆڕایی</h2>}
+            title={<h2 style={{ textAlign: 'center', color: 'white' }}>١٠٠ پەڕە</h2>}
           >
-            <Card.Meta description="مانگانە ٢٠ پەڕە بەخۆڕایی وەردەگریت" />
+            <Card.Meta description={<span>&nbsp;</span>} />
             <Row gutter={[0, 10]} style={{ marginTop: 10 }}>
               <Col span={24}>
-                <List bordered>
-                  <List.Item>وەرگرتنی ٢٠ پەڕە مانگانە</List.Item>
+                <List>
+                  <List.Item>١٠٠ پەڕ بکڕە تەنها بە ٨،٠٠٠ دینار</List.Item>
                   <List.Item>توانای بەکارهێنانی ژیر OCR بە هەموو توانایەکانیەوە</List.Item>
                   <List.Item>بەکارهێنانی API بەردەرستە</List.Item>
                 </List>
               </Col>
               <Col span={24}>
-                <Button size="large" type="dashed" block>
+                <Button onClick={() => showFastpayBarcode(2)} size="large" type="dashed" block>
                   <img src="/assets/fastpay.png" width="50" alt="" />
                 </Button>
               </Col>
@@ -129,20 +166,20 @@ export default function Balance(props) {
         </Col>
         <Col span={6}>
           <Card
-            className="custom-box-shadow price-table price-table-primary-bg"
-            title={<h2 style={{ textAlign: 'center', color: 'white' }}>خۆڕایی</h2>}
+            className="custom-box-shadow price-table "
+            title={<h2 className="is-primary-text" style={{ textAlign: 'center' }}>٥٠٠ پەڕە</h2>}
           >
-            <Card.Meta description="مانگانە ٢٠ پەڕە بەخۆڕایی وەردەگریت" />
+            <Card.Meta description={<span>&nbsp;</span>} />
             <Row gutter={[0, 10]} style={{ marginTop: 10 }}>
               <Col span={24}>
-                <List bordered>
-                  <List.Item>وەرگرتنی ٢٠ پەڕە مانگانە</List.Item>
+                <List>
+                  <List.Item>٥٠٠ پەڕ بکڕە تەنها بە ٣٠،٠٠٠ دینار</List.Item>
                   <List.Item>توانای بەکارهێنانی ژیر OCR بە هەموو توانایەکانیەوە</List.Item>
                   <List.Item>بەکارهێنانی API بەردەرستە</List.Item>
                 </List>
               </Col>
               <Col span={24}>
-                <Button size="large" type="dashed" block>
+                <Button onClick={() => showFastpayBarcode(3)} size="large" type="dashed" block>
                   <img src="/assets/fastpay.png" width="50" alt="" />
                 </Button>
               </Col>
@@ -151,26 +188,27 @@ export default function Balance(props) {
         </Col>
         <Col span={6}>
           <Card
-            className="custom-box-shadow price-table price-table-primary-bg"
-            title={<h2 style={{ textAlign: 'center', color: 'white' }}>خۆڕایی</h2>}
+            className="custom-box-shadow price-table "
+            title={<h2 className="is-primary-text" style={{ textAlign: 'center' }}>١٠٠٠ پەڕە</h2>}
           >
-            <Card.Meta description="مانگانە ٢٠ پەڕە بەخۆڕایی وەردەگریت" />
+            <Card.Meta description={<span>&nbsp;</span>} />
             <Row gutter={[0, 10]} style={{ marginTop: 10 }}>
               <Col span={24}>
-                <List bordered>
-                  <List.Item>وەرگرتنی ٢٠ پەڕە مانگانە</List.Item>
+                <List>
+                  <List.Item>١٠٠٠ پەڕ بکڕە تەنها بە ٥٠،٠٠٠ دینار</List.Item>
                   <List.Item>توانای بەکارهێنانی ژیر OCR بە هەموو توانایەکانیەوە</List.Item>
                   <List.Item>بەکارهێنانی API بەردەرستە</List.Item>
                 </List>
               </Col>
               <Col span={24}>
-                <Button size="large" type="dashed" block>
+                <Button onClick={() => showFastpayBarcode(4)} size="large" type="dashed" block>
                   <img src="/assets/fastpay.png" width="50" alt="" />
                 </Button>
               </Col>
             </Row>
           </Card>
         </Col>
+
       </Row>
     </>
   );

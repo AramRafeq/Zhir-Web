@@ -3,18 +3,18 @@ import {
   Row, Col,
   Table,
   Button,
+  Drawer,
 } from 'antd';
 import { QrcodeOutlined } from '@ant-design/icons';
 import superagent from 'superagent';
 import dayjs from 'dayjs';
 import RechargeBalance from './RechargeBalance';
-import Modal from '../basic/Modal';
 
 export default function Balance(props) {
   const { user } = props;
   const [balance, setBalance] = useState(0);
   const [transactionList, setTransactionList] = useState([]);
-  const modalRef = React.createRef();
+  const [paymentDrawerVisible, setPaymentDrawerVisible] = useState(false);
   const loadBalanceCount = () => {
     superagent.get(`${process.env.NEXT_PUBLIC_API_URL}/user/balance`)
       .set('authorization', `Bearer ${user.token}`)
@@ -35,8 +35,11 @@ export default function Balance(props) {
       });
   };
 
-  const showRechargeBalance = () => {
-    modalRef.current.click();
+  const paymentDrawerClose = () => {
+    setPaymentDrawerVisible(false);
+  };
+  const paymentDrawerOpen = () => {
+    setPaymentDrawerVisible(true);
   };
   useEffect(() => {
     loadBalanceCount();
@@ -85,20 +88,14 @@ export default function Balance(props) {
   ];
   return (
     <>
-      <Modal
-        btnRef={modalRef}
-        size="modal-lg"
-        header={null}
-        // header="پڕکردنەوەی باڵانس"
-      >
-
+      <Drawer title="پڕکردنەوەی بالانسی ژیر OCR" onClose={paymentDrawerClose} visible={paymentDrawerVisible} placement="bottom" height="68%">
         <RechargeBalance user={user} />
-      </Modal>
+      </Drawer>
       <Row justify="center">
         <Col span={24}>
           <Row gutter={[10, 5]} justify="center" align="middle">
             <Col span={16}>
-              <Button onClick={showRechargeBalance} block size="large" type="dashed">
+              <Button onClick={paymentDrawerOpen} block size="large" type="dashed">
                 باڵانسی ماوە بریتیە لە
                 {' '}
                 <u>{balance}</u>
@@ -107,7 +104,7 @@ export default function Balance(props) {
               </Button>
             </Col>
             <Col span={8}>
-              <Button type="primary" onClick={showRechargeBalance} block size="large" icon={<QrcodeOutlined />}>پڕکردنەوەی باڵانس</Button>
+              <Button type="primary" onClick={paymentDrawerOpen} block size="large" icon={<QrcodeOutlined />}>پڕکردنەوەی باڵانس</Button>
             </Col>
             <Col span={24}>
               <Table
