@@ -6,7 +6,7 @@ module.exports = withAntdLess({
     ignoreDuringBuilds: true,
   },
   modifyVars: {
-    '@primary-color': '#892CDC',
+    '@primary-color': '#ffac0e',
     '@border-radius-base': '5px',
   },
   reactStrictMode: true,

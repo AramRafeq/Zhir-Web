@@ -1,6 +1,11 @@
+@font-face {
+    font-family: Rudaw;
+    src: url('./../public/assets/fonts/NewRudaw-Regular.ttf');
+}
 
 :root {
-    --primary-color: #892CDC;
+    /* --primary-color: #892CDC; */
+    --primary-color: #ffac0e;
     --danger-color: #dc3545;
     --dark-grey-color: #878787;
     --success-color: #48c774;
@@ -13,9 +18,9 @@
 body{
     overflow-x: hidden;
 }
-/* * {
+* {
     font-family: "vazir";
-} */
+}
 div[role="alert"],.ant-form-item-extra{
     font-size: 12px !important;
 }
@@ -128,5 +133,19 @@ div[role="alert"],.ant-form-item-extra{
 .price-table-primary-bg .ant-card-head{
     background: var(--primary-color);
     
+}
+
+
+/* landing page classes */
+.landing-main-wraper{
+    background: white  !important;
+    padding: 2rem;
+}
+.landing-main-wraper .ant-layout-header{
+    background: transparent !important;
+}
+
+.landing-menu{
+    border: none !important; 
 }
 
