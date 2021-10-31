@@ -7,7 +7,7 @@ import { AiFillApi, AiFillQuestionCircle } from 'react-icons/ai';
 import { GoBook } from 'react-icons/go';
 
 import authGuard from '../../../helpers/authGuard';
-import Layout from '../../../components/layout/Index';
+import Layout from '../../../components/layout/Dashboard';
 import OCR from '../../../components/ocr/Ocr';
 import ForDevelopers from '../../../components/ocr/ForDevelopers';
 import Faq from '../../../components/ocr/Faq.jsx';

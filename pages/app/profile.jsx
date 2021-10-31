@@ -3,7 +3,7 @@ import { withIronSession } from 'next-iron-session';
 import { AiFillProfile } from 'react-icons/ai';
 import { Tabs } from 'antd';
 import authGuard from '../../helpers/authGuard';
-import Layout from '../../components/layout/Index';
+import Layout from '../../components/layout/Dashboard';
 import ProfileForm from '../../components/setting/Profile';
 
 class Profile extends React.Component {

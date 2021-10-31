@@ -1,7 +1,7 @@
 import React from 'react';
 import { withIronSession } from 'next-iron-session';
 import authGuard from '../../../helpers/authGuard';
-import Layout from '../../../components/layout/Index';
+import Layout from '../../../components/layout/Dashboard';
 import CommingSoon from '../../../components/commingsoon/index';
 
 class STTIndex extends React.Component {

@@ -8,12 +8,11 @@ import {
 } from 'antd';
 import Modal from '../basic/Modal';
 
-export default function Balance(props) {
-  const { user } = props;
+export default function Balance() {
+  // const { user } = props;
   const qrCodeModalRef = React.createRef();
   const [pageIndex, setPageIndex] = useState(-1);
-  const fastpayMob = '964 750 766 5935';
-  const pages = [20, 50, 100, 500, 1000];
+  // const fastpayMob = '964 750 766 5935';
   const labels = ['🎁 دیاری ', '٥٠ پەڕە', '١٠٠ پەڕە', '٥٠٠ پەڕە ', '١،٠٠٠ پەڕە'];
   const prices = ['٠', '٥ هەزار', '٨ هەزار', '٣٠ هەزار', '٥٠ هەزار'];
   const QRCodeUrls = [
@@ -23,7 +22,7 @@ export default function Balance(props) {
     '/assets/fastpay-qrcodes/30000IQD.png',
     '/assets/fastpay-qrcodes/50000IQD.png',
   ];
-  const currency = 'iqd'; // it could take iqd,rial
+  // const currency = 'iqd'; // it could take iqd,rial
   const showFastpayBarcode = (pI = 0) => {
     setPageIndex(pI);
   };
