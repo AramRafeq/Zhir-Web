@@ -147,5 +147,19 @@ div[role="alert"],.ant-form-item-extra{
 
 .landing-menu{
     border: none !important; 
+    font-size: 18px !important;
+}
+
+.why-zhir-card{
+    position: relative;
+    min-height: 25rem;
+    background: rgb(239,244,251) !important;
+    background: linear-gradient(360deg, rgba(239,244,251,1) 0%, rgba(0,181,255,0) 100%) !important;
+}
+.why-zhir-card object{
+    /* width: 70%; */
+    position: absolute;
+    left: -2rem;
+    bottom: -2rem;
 }
 
