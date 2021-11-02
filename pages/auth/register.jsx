@@ -62,7 +62,9 @@ export default class Register extends React.Component {
             <Row justify="center">
               <Col style={{ marginTop: '-5rem' }} span={4}>
                 <Card className="custom-box-shadow is-primary-bg" bordered={false}>
-                  <img src="/assets/white-logo.png" alt="logo" style={{ width: '100%' }} />
+                  <a href="/">
+                    <img src="/assets/white-logo.png" alt="logo" style={{ width: '100%' }} />
+                  </a>
                 </Card>
               </Col>
             </Row>

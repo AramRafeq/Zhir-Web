@@ -62,7 +62,9 @@ class Index extends React.Component {
           <div className="sidebar-logo-container">
             <Row justify="center" align="middle">
               <Col span={24} style={{ padding: sideBarCollapsed ? '1.25rem' : '4.063rem 5.063rem 0' }}>
-                <img src="/assets/white-logo.png" className="logo" alt="logo" />
+                <a href="/">
+                  <img src="/assets/white-logo.png" className="logo" alt="logo" />
+                </a>
               </Col>
               <Col span={24}>
                 {

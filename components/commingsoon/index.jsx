@@ -93,7 +93,7 @@ export default function CommingSoon() {
           {Illustration}
         </Col>
         <Col span={24}>
-          <h3 style={{ textAlign: 'center' }}>بەم زووانە ئەم خزمەتگوزاریە بەردەست دەبێت</h3>
+          <h3 style={{ textAlign: 'center' }}> ئەم خزمەتگوزاریە بەردەست دەبێت لە دەهاتوویەکی نزیک</h3>
         </Col>
       </Row>
     </>
