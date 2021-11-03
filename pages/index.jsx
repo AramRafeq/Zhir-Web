@@ -72,8 +72,8 @@ export default function Home(props) {
 
           </Row>
         </Layout.Header>
-        <Layout.Content style={{ padding: '4rem', paddingTop: '8rem' }}>
-          <Row gutter={[10, 10]} ref={homeRef}>
+        <Layout.Content className="lainding-content" style={{ padding: '4rem', paddingTop: '8rem' }}>
+          <Row gutter={[10, 30]} ref={homeRef}>
             <Col md={12} sm={24}>
               <Typography.Title>خــزمـەتــگــوزاری ژیـــر</Typography.Title>
               <Typography.Paragraph style={{ fontSize: 18 }}>
@@ -97,7 +97,7 @@ export default function Home(props) {
               </Typography.Title>
             </Col>
             <Col span={24}>
-              <Row gutter={[50, 10]} justify="center">
+              <Row gutter={[50, 30]} justify="center">
                 <Col md={7} sm={24}>
                   <Card bordered={false} className="why-zhir-card">
                     <Typography.Title level={2} className="is-primary-text">خێرایە</Typography.Title>
@@ -138,7 +138,7 @@ export default function Home(props) {
               </Typography.Title>
             </Col>
             <Col span={24}>
-              <Row gutter={[50, 10]} justify="center">
+              <Row gutter={[50, 30]} justify="center">
                 <Col md={6} sm={24}>
                   <Card
                     className="custom-box-shadow price-table"
@@ -247,9 +247,9 @@ export default function Home(props) {
             </Col>
           </Row>
 
-          <Row style={{ marginTop: '8rem' }}>
-            <Col md={12} sm={24}>
-              <Row gutter={[10, 30]} justify="center" align="middle" style={{ padding: '6rem' }} ref={contactUsRef}>
+          <Row style={{ marginTop: '8rem' }} align="middle">
+            <Col md={12} sm={24} xs={24}>
+              <Row gutter={[10, 30]} justify="center" align="middle" ref={contactUsRef}>
                 <Col span={24} style={{ textAlign: 'center' }}>
                   <Typography.Title>
                     <span className="is-primary-text"> پەیوەندیمان </span>
