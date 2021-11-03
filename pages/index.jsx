@@ -9,6 +9,7 @@ import {
   List,
   Tag,
 } from 'antd';
+import Head from 'next/head';
 import { FaFacebookF, FaTwitter } from 'react-icons/fa';
 import { HomeOutlined, DashboardOutlined } from '@ant-design/icons';
 import { MdOutlineLogout, MdOutlineLogin } from 'react-icons/md';
@@ -26,6 +27,10 @@ export default function Home(props) {
   };
   return (
     <>
+      <Head>
+        <title>ژیر | خزمەتگوزاری دەرهێنانی دەقەکان</title>
+
+      </Head>
       <Layout className="landing-main-wraper">
         <Layout.Header>
           <Row gutter={[10, 10]}>

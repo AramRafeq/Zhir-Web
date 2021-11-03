@@ -37,6 +37,7 @@ export default class Profile extends React.Component {
               message: 'تەواوکرا',
               description:
                 'زانیاریەکانت نوێکرایەوە',
+              placement: 'bottomRight',
             });
           } else if (err.status === 422) {
             const msg = (
