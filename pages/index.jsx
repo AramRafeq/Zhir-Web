@@ -34,7 +34,7 @@ export default function Home(props) {
       <Layout className="landing-main-wraper">
         <Layout.Header>
           <Row gutter={[10, 10]}>
-            <Col span={10}>
+            <Col lg={10} md={24} sm={24}>
               <Menu mode="horizontal" className="landing-menu" defaultActiveFirst>
                 <Menu.Item
                   onClick={() => scroll(homeRef)}
@@ -50,21 +50,21 @@ export default function Home(props) {
             {isLogedIn
               ? (
                 <>
-                  <Col span={3} offset={7}>
-                    <Button block type="primary" href="/app" icon={<DashboardOutlined />}>داشبۆردی ژیر</Button>
+                  <Col lg={{ span: 3, offset: 7 }} md={{ span: 24, offset: 0 }} sm={24} xs={24}>
+                    <Button style={{ marginBottom: '-2rem' }} block type="primary" href="/app" icon={<DashboardOutlined />}>داشبۆردی ژیر</Button>
                   </Col>
-                  <Col span={2}>
-                    <Button type="dashed" href="/api/auth/logout" danger icon={<MdOutlineLogout className="custom-icon" />}> &nbsp; چوونەدەرەوە </Button>
+                  <Col lg={{ span: 3, offset: 0 }} md={{ span: 24, offset: 0 }} sm={24} xs={24}>
+                    <Button block type="dashed" href="/api/auth/logout" danger icon={<MdOutlineLogout className="custom-icon" />}> &nbsp; چوونەدەرەوە </Button>
                   </Col>
                 </>
               )
 
               : (
                 <>
-                  <Col span={3} offset={7}>
-                    <Button block type="dashed" href="/auth/login" icon={<MdOutlineLogin className="custom-icon" />}>چوونەژوورەوە</Button>
+                  <Col lg={{ span: 3, offset: 7 }} md={{ span: 24, offset: 0 }} sm={24} xs={24}>
+                    <Button style={{ marginBottom: '-2rem' }} block type="dashed" href="/auth/login" icon={<MdOutlineLogin className="custom-icon" />}>چوونەژوورەوە</Button>
                   </Col>
-                  <Col span={2}>
+                  <Col lg={{ span: 3, offset: 0 }} md={{ span: 24, offset: 0 }} sm={24} xs={24}>
                     <Button type="primary" href="/auth/register" icon={<MdOutlineLogout className="custom-icon" />}> &nbsp; دروستکردنی هەژمار </Button>
                   </Col>
                 </>
@@ -74,7 +74,7 @@ export default function Home(props) {
         </Layout.Header>
         <Layout.Content style={{ padding: '4rem', paddingTop: '8rem' }}>
           <Row gutter={[10, 10]} ref={homeRef}>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <Typography.Title>خــزمـەتــگــوزاری ژیـــر</Typography.Title>
               <Typography.Paragraph style={{ fontSize: 18 }}>
                 ژیر خزمەتگوزارییەکی سەرهێڵی OCR ، واتە بەکاردێ بۆ دەرهێنانی نووسین (دەق) لە ناو
@@ -85,7 +85,7 @@ export default function Home(props) {
                 <a href="https://www.youtube.com/watch?v=edAIZkdskR4"> چۆنیەتی بەکارهێنان  ؟ </a>
               </Typography.Paragraph>
             </Col>
-            <Col span={12} style={{ textAlign: 'center' }}>
+            <Col md={12} sm={24} style={{ textAlign: 'center' }}>
               <object style={{ width: '85%', marginTop: '-2rem' }} type="image/svg+xml" data="/assets/landing-animation.svg">svg-animation</object>
             </Col>
           </Row>
@@ -98,7 +98,7 @@ export default function Home(props) {
             </Col>
             <Col span={24}>
               <Row gutter={[50, 10]} justify="center">
-                <Col span={7}>
+                <Col md={7} sm={24}>
                   <Card bordered={false} className="why-zhir-card">
                     <Typography.Title level={2} className="is-primary-text">خێرایە</Typography.Title>
                     <Typography.Paragraph style={{ fontSize: 18 }}>
@@ -108,7 +108,7 @@ export default function Home(props) {
                     <object style={{ width: '30%' }} type="image/svg+xml" data="/assets/flash.svg">svg-animation</object>
                   </Card>
                 </Col>
-                <Col span={7}>
+                <Col md={7} sm={24}>
                   <Card bordered={false} className="why-zhir-card">
                     <Typography.Title level={2} className="is-primary-text">هەرزانە</Typography.Title>
                     <Typography.Paragraph style={{ fontSize: 18 }}>
@@ -118,7 +118,7 @@ export default function Home(props) {
                     <object style={{ width: '30%' }} type="image/svg+xml" data="/assets/money.svg">svg-animation</object>
                   </Card>
                 </Col>
-                <Col span={7}>
+                <Col md={7} sm={24}>
                   <Card bordered={false} className="why-zhir-card">
                     <Typography.Title level={2} className="is-primary-text">ئاسانە</Typography.Title>
                     <Typography.Paragraph style={{ fontSize: 18 }}>
@@ -139,7 +139,7 @@ export default function Home(props) {
             </Col>
             <Col span={24}>
               <Row gutter={[50, 10]} justify="center">
-                <Col span={6}>
+                <Col md={6} sm={24}>
                   <Card
                     className="custom-box-shadow price-table"
                     bordered={false}
@@ -166,7 +166,7 @@ export default function Home(props) {
                   </Card>
                 </Col>
 
-                <Col span={6}>
+                <Col md={6} sm={24}>
                   <Card
                     className="custom-box-shadow price-table price-table-primary-bg"
                     title={<Typography.Title level={2} style={{ textAlign: 'center', color: 'white' }}>١٠٠ پەڕە</Typography.Title>}
@@ -192,7 +192,7 @@ export default function Home(props) {
                     </Row>
                   </Card>
                 </Col>
-                <Col span={6}>
+                <Col md={6} sm={24}>
                   <Card
                     className="custom-box-shadow price-table "
                     title={<Typography.Title className="is-primary-text" level={2} style={{ textAlign: 'center' }}>٥٠٠ پەڕە</Typography.Title>}
@@ -218,7 +218,7 @@ export default function Home(props) {
                     </Row>
                   </Card>
                 </Col>
-                <Col span={6}>
+                <Col md={6} sm={24}>
                   <Card
                     className="custom-box-shadow price-table "
                     title={<Typography.Title className="is-primary-text" level={2} style={{ textAlign: 'center' }}>١٠٠٠ پەڕە</Typography.Title>}
@@ -248,7 +248,7 @@ export default function Home(props) {
           </Row>
 
           <Row style={{ marginTop: '8rem' }}>
-            <Col span={12}>
+            <Col md={12} sm={24}>
               <Row gutter={[10, 30]} justify="center" align="middle" style={{ padding: '6rem' }} ref={contactUsRef}>
                 <Col span={24} style={{ textAlign: 'center' }}>
                   <Typography.Title>
@@ -275,9 +275,9 @@ export default function Home(props) {
                   <a style={{ fontSize: '1.5rem' }} href="https://www.facebook.com/zhir.io" target="_blank" rel="noreferrer">
                     <FaFacebookF />
                   </a>
-            &nbsp;
-            &nbsp;
-            &nbsp;
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
                   <a style={{ fontSize: '1.5rem' }} href="https://twitter.com/zhir_io" target="_blank" rel="noreferrer">
                     <FaTwitter />
                   </a>
@@ -285,7 +285,7 @@ export default function Home(props) {
 
               </Row>
             </Col>
-            <Col span={12} style={{ textAlign: 'center' }}>
+            <Col md={12} sm={24} style={{ textAlign: 'center' }}>
               <object style={{ width: '90%', marginBottom: '-1rem' }} type="image/svg+xml" data="/assets/footer.svg">svg-animation</object>
             </Col>
           </Row>

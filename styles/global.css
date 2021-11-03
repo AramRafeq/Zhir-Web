@@ -159,3 +159,6 @@ div[role="alert"],.ant-form-item-extra{
     bottom: -2rem;
 }
 
+.ant-menu  li{
+    text-align: right  !important;
+}
