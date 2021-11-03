@@ -62,7 +62,7 @@ export default function Balance() {
             />
           </Col>
           <Col style={{ textAlign: 'center' }} span={24}>
-            <img width="40%" src={QRCodeUrls[pageIndex]} alt="fastpay" />
+            <img className="fastpay-qr" width="40%" src={QRCodeUrls[pageIndex]} alt="fastpay" />
           </Col>
           <Col style={{ textAlign: 'center' }} span={24}>
             <Alert
@@ -96,7 +96,7 @@ export default function Balance() {
         </Row>
       </Modal>
       <Row gutter={[15, 15]} style={{ padding: 20 }}>
-        <Col span={6}>
+        <Col lg={6} md={12} sm={24} xs={24}>
           <Card
             className="custom-box-shadow price-table "
             title={<h2 className="is-primary-text" style={{ textAlign: 'center' }}>٢٠ پەڕە</h2>}
@@ -119,7 +119,7 @@ export default function Balance() {
             </Row>
           </Card>
         </Col>
-        <Col span={6} style={{ display: 'none' }}>
+        <Col lg={6} md={12} sm={24} xs={24} style={{ display: 'none' }}>
           <Card
             className="custom-box-shadow price-table "
             title={<h2 style={{ textAlign: 'center' }}>٥٠ پەڕە</h2>}
@@ -141,7 +141,7 @@ export default function Balance() {
             </Row>
           </Card>
         </Col>
-        <Col span={6}>
+        <Col lg={6} md={12} sm={24} xs={24}>
           <Card
             className="custom-box-shadow price-table price-table-primary-bg"
             title={<h2 style={{ textAlign: 'center', color: 'white' }}>١٠٠ پەڕە</h2>}
@@ -163,7 +163,7 @@ export default function Balance() {
             </Row>
           </Card>
         </Col>
-        <Col span={6}>
+        <Col lg={6} md={12} sm={24} xs={24}>
           <Card
             className="custom-box-shadow price-table "
             title={<h2 className="is-primary-text" style={{ textAlign: 'center' }}>٥٠٠ پەڕە</h2>}
@@ -185,7 +185,7 @@ export default function Balance() {
             </Row>
           </Card>
         </Col>
-        <Col span={6}>
+        <Col lg={6} md={12} sm={24} xs={24}>
           <Card
             className="custom-box-shadow price-table "
             title={<h2 className="is-primary-text" style={{ textAlign: 'center' }}>١٠٠٠ پەڕە</h2>}

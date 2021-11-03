@@ -109,7 +109,7 @@ class Index extends React.Component {
             </Col>
           </Row> */}
         </Layout.Sider>
-        <Layout.Content style={{ padding: '50px 50px' }}>
+        <Layout.Content className="layout-content-dashboard" style={{ padding: '50px 50px' }}>
           <Card
             title={cardTitle}
             className="custom-box-shadow"

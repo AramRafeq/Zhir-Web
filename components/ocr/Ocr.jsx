@@ -119,12 +119,14 @@ export default function Ocr(props) {
       dataIndex: 'name',
       key: 'name',
       width: '15%',
+      responsive: ['sm'],
     },
     {
       title: 'ژمارەی وێنەکان',
       dataIndex: 'page_count',
       key: 'page_count',
       width: '17%',
+      responsive: ['sm'],
       render: (v, r) => {
         let returnObject = (<></>);
         if ((v - r.paid_page_count) > 0) {
@@ -159,6 +161,7 @@ export default function Ocr(props) {
       dataIndex: 'created_at',
       key: 'created_at',
       width: '20%',
+      responsive: ['sm'],
       render: (v) => convertNumberToArabic(dayjs(v).format('YYYY-MM-DD')),
     },
     {
@@ -265,7 +268,7 @@ export default function Ocr(props) {
       </Drawer>
       <Row gutter={[10, 10]}>
 
-        <Col span={7}>
+        <Col lg={7} md={21} sm={21} xs={21}>
           <Input onChange={searchQuryInputChanged} placeholder="بە کۆد بگەڕێ" size="large" style={{ width: '100%' }} />
         </Col>
         <Col span={3} style={{ paddingTop: 10 }}>
@@ -273,11 +276,12 @@ export default function Ocr(props) {
             <LoadingOutlined spin />
           </span>
         </Col>
-        <Col offset={9} span={5}>
+        <Col lg={{ span: 5, offset: 9 }} md={24} sm={24} xs={24}>
           <Button block size="large" type="primary" icon={<UploadOutlined />} onClick={() => setUploaderDrawerVisible(true)}>وێنە باربکە</Button>
         </Col>
         <Col span={24}>
           <Table
+            scroll={{ x: true }}
             bordered
             size="small"
             className="joblist-table"

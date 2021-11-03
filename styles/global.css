@@ -18,6 +18,22 @@
         padding-right: 0  !important;
         padding-left: 0  !important;
     }
+    .layout-content-dashboard{
+        padding: 0 !important;
+    }
+    .fastpay-qr{
+        width:  100% !important;
+    }
+    .uploader-options-panel{
+        position: relative !important;
+    }
+}
+@media all and (max-width: 992px) { 
+
+   
+    .uploader-options-panel{
+        position: relative !important;
+    }
 }
 body{
     overflow-x: hidden;

@@ -62,7 +62,7 @@ export default class Register extends React.Component {
           <title>ژیر | خۆتۆمارکردن</title>
         </Head>
         <Row justify="center" align="middle" style={{ height: `${windowHeight}px`, marginTop: '4rem' }}>
-          <Col span={10}>
+          <Col lg={10} md={15} sm={20} xs={20}>
             <Card className="custom-box-shadow" bordered={false} style={{ padding: '0.75rem' }}>
               <Row justify="center">
                 <Col style={{ marginTop: '-5rem' }} span={4}>
@@ -86,7 +86,7 @@ export default class Register extends React.Component {
                 <Col span={24} style={{ display: (success) ? 'none' : '' }}>
                   <Form onFinish={this.onFinish} layout="vertical">
                     <Row gutter={[10, 5]}>
-                      <Col span={12}>
+                      <Col lg={12} md={24} sm={24} xs={24}>
                         <Form.Item
                           name="name"
                           label="ناوی بەکارهێنەر"
@@ -97,7 +97,7 @@ export default class Register extends React.Component {
                           <Input size="large" autoComplete="new" prefix={<UserOutlined className="is-icon-prefix" />} />
                         </Form.Item>
                       </Col>
-                      <Col span={12}>
+                      <Col lg={12} md={24} sm={24} xs={24}>
                         <Form.Item
                           name="company_name"
                           label="شوێنی کار/کۆمپانیا"
@@ -118,7 +118,7 @@ export default class Register extends React.Component {
                           <Input size="large" autoComplete="new" className="is-ltr" prefix={<ContactsOutlined className="is-icon-prefix" />} />
                         </Form.Item>
                       </Col>
-                      <Col span={12}>
+                      <Col lg={12} md={24} sm={24} xs={24}>
                         <Form.Item
                           name="password"
                           label="تێپەڕەوشە"
@@ -131,7 +131,7 @@ export default class Register extends React.Component {
 
                         </Form.Item>
                       </Col>
-                      <Col span={12}>
+                      <Col lg={12} md={24} sm={24} xs={24}>
 
                         <Form.Item
                           name="password_retype"

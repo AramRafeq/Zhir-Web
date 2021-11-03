@@ -51,6 +51,7 @@ export default function Balance(props) {
       dataIndex: 'id',
       key: 'id',
       width: '5%',
+      responsive: ['sm'],
       render: (v, r, index) => index + 1,
     },
     {
@@ -58,6 +59,7 @@ export default function Balance(props) {
       dataIndex: 'created_at',
       key: 'created_at',
       width: '10%',
+      responsive: ['sm'],
       render: (v) => (dayjs(v).format('YYYY-MM-DD')),
     },
     {
@@ -83,6 +85,8 @@ export default function Balance(props) {
       title: 'تێبینی',
       dataIndex: 'user_note',
       key: 'user_note',
+      responsive: ['sm'],
+
     },
 
   ];
@@ -93,17 +97,21 @@ export default function Balance(props) {
       </Drawer>
       <Row justify="center">
         <Col span={24}>
-          <Row gutter={[10, 5]} justify="center" align="middle">
-            <Col span={16}>
+          <Row gutter={[10, 10]} justify="center" align="middle">
+            <Col lg={16} md={24} sm={24} xs={24}>
               <Button onClick={paymentDrawerOpen} block size="large" type="dashed">
                 باڵانسی ماوە بریتیە لە
                 {' '}
-                <u>{balance}</u>
+                <u>
+                  {' '}
+                  {balance}
+                  {' '}
+                </u>
                 {' '}
                 لاپەڕە
               </Button>
             </Col>
-            <Col span={8}>
+            <Col lg={8} md={24} sm={24} xs={24}>
               <Button type="primary" onClick={paymentDrawerOpen} block size="large" icon={<QrcodeOutlined />}>پڕکردنەوەی باڵانس</Button>
             </Col>
             <Col span={24}>

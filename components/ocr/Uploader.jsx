@@ -335,7 +335,10 @@ export default function Uploader(props) {
 
     return (
       <Col
-        span={4}
+        lg={4}
+        md={12}
+        xs={24}
+        sm={24}
         ref={setNodeRef}
         style={style}
       >
@@ -400,9 +403,9 @@ export default function Uploader(props) {
       <ImageEditor file={editingFile} onFinish={imageEditingFinished} />
 
       <Row gutter={[30, 10]}>
-        <Col span={6} style={{ position: 'fixed' }}>
+        <Col className="uploader-options-panel" lg={{ span: 6 }} md={{ span: 24, order: 2 }} sm={{ span: 24, order: 2 }} xs={{ span: 24, order: 2 }} style={{ position: 'fixed' }}>
           <Form className="custom-box-shadow" style={{ width: '100%', padding: 12, borderRadius: 3 }} layout="vertical" initialValues={initialFormValues} onFinish={onFormFinish}>
-            <Row gutter={[10, 0]} align="middle">
+            <Row gutter={[10, 10]} align="middle">
               <Col span={24}>
                 <Form.Item name="group_name" label="ناوێ بۆ کرداری ناسینەوە">
                   <Input prefix={<BorderlessTableOutlined />} style={{ width: '100%' }} placeholder="نموونە: دیوانی مەحوی ١-١٠٠" />
@@ -441,14 +444,14 @@ export default function Uploader(props) {
                   </Checkbox.Group>
                 </Form.Item>
               </Col>
-              <Col span={16}>
+              <Col lg={16} md={24} sm={24} xs={24}>
                 <Button size="middle" htmlType="submit" block loading={uploaderLoading} disabled={fileList.length === 0} type="primary" icon={<CloudUploadOutlined />}>
                   {fileList.length}
                   &nbsp;
                   وێنە باربکە و بینێرە بۆ ژیر
                 </Button>
               </Col>
-              <Col span={4}>
+              <Col lg={4} md={24} sm={24} xs={24}>
                 <Popconfirm
                   title="ئایا دڵنیای لە سڕینەوەی هەموو فایلەکان ؟"
                   onConfirm={clearAll}
@@ -459,14 +462,13 @@ export default function Uploader(props) {
                   <Button block htmlType="button" type="primary" disabled={(fileList.length === 0 || uploaderLoading)} danger icon={<ClearOutlined />} />
                 </Popconfirm>
               </Col>
-              <Col span={4}>
-
+              <Col lg={4} md={24} sm={24} xs={24}>
                 <Button block htmlType="button" onClick={toggleViewingMode} type="dashed" disabled={(fileList.length === 0 || uploaderLoading)} icon={viewingMode === 'grid' ? <UnorderedListOutlined /> : <TableOutlined />} />
               </Col>
             </Row>
           </Form>
         </Col>
-        <Col span={18} offset={6}>
+        <Col lg={{ span: 18, offset: 6 }} ms={12} sm={24} xs={24}>
           <ReactDragListView
             nodeSelector=".draggble"
             onDragEnd={onDragEnd}

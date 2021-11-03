@@ -55,7 +55,7 @@ export default class Login extends React.Component {
           <title>ژیر | چوونەژوورەوە</title>
         </Head>
         <Row justify="center" align="middle" style={{ height: `${windowHeight}px` }}>
-          <Col span={6}>
+          <Col lg={6} md={15} sm={20} xs={20}>
             <Card className="custom-box-shadow" bordered={false} style={{ padding: '0.75rem' }}>
               <Row justify="center">
                 <Col style={{ marginTop: '-5rem' }} span={7}>

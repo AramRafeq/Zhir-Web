@@ -39,13 +39,13 @@ export default class ForDevelopers extends React.Component {
               <Col span={24}>
                 <Form layout="vertical" initialValues={initialFormValues}>
                   <Row gutter={[10, 5]}>
-                    <Col span={12}>
+                    <Col lg={12} md={24} sm={24} xs={24}>
 
                       <Form.Item extra="تێبینی: دەتوانیت ئەم کلیلە بەکارببەیت بۆ بەکارهێنانی API ئەم کلیلە نەگۆرێکی تایبەتە بە هەژماری تۆ" label="کلیلی API" name="api_key">
                         <Input style={{ textAlign: 'center' }} size="large" autoComplete="new" readOnly />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col lg={12} md={24} sm={24} xs={24}>
                       <Form.Item extra="تێبینی: ئەم بڕە بەپێی ڕێکەوتنە بەڵام وەک هەر هەژمارێکی ئاسایی دەتوانیت باڵانسی زیاتر بکڕیت بۆ بەکارهێنانی لە API یان بە هەژماری خۆڕایی مانگانە ٥٠ لاپەڕە وەربگرە" label="پەڕەی وەرگیراو / مانگانە" name="monthly_recharge">
                         <Input style={{ textAlign: 'center' }} size="large" autoComplete="new" readOnly />
                       </Form.Item>
