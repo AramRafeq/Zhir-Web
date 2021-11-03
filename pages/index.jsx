@@ -61,11 +61,11 @@ export default function Home(props) {
 
               : (
                 <>
-                  <Col lg={{ span: 3, offset: 7 }} md={{ span: 24, offset: 0 }} sm={24} xs={24}>
-                    <Button style={{ marginBottom: '-2rem' }} block type="dashed" href="/auth/login" icon={<MdOutlineLogin className="custom-icon" />}>چوونەژوورەوە</Button>
+                  <Col style={{ marginBottom: '-2rem' }} lg={{ span: 3, offset: 7 }} md={{ span: 24, offset: 0 }} sm={24} xs={24}>
+                    <Button block type="dashed" href="/auth/login" icon={<MdOutlineLogin className="custom-icon" />}>چوونەژوورەوە</Button>
                   </Col>
-                  <Col lg={{ span: 3, offset: 0 }} md={{ span: 24, offset: 0 }} sm={24} xs={24}>
-                    <Button type="primary" href="/auth/register" icon={<MdOutlineLogout className="custom-icon" />}> &nbsp; دروستکردنی هەژمار </Button>
+                  <Col lg={{ span: 4, offset: 0 }} md={{ span: 24, offset: 0 }} sm={24} xs={24}>
+                    <Button block type="primary" href="/auth/register" icon={<MdOutlineLogout className="custom-icon" />}> &nbsp; دروستکردنی هەژمار </Button>
                   </Col>
                 </>
               )}
