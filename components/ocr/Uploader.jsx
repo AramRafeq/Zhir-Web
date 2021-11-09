@@ -421,7 +421,7 @@ export default function Uploader(props) {
                         </Checkbox>
                       </Col>
                       <Col span={24}>
-                        <Checkbox value="ar" style={{ lineHeight: '32px' }}>
+                        <Checkbox value="ara" style={{ lineHeight: '32px' }}>
                           عربی
                         </Checkbox>
                       </Col>
@@ -436,7 +436,7 @@ export default function Uploader(props) {
                         </Checkbox>
                       </Col>
                       <Col span={24}>
-                        <Checkbox value="fr" style={{ lineHeight: '32px' }}>
+                        <Checkbox value="fra" style={{ lineHeight: '32px' }}>
                           فەڕەنسی
                         </Checkbox>
                       </Col>
