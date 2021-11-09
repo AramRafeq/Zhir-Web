@@ -88,13 +88,12 @@ class Index extends React.Component {
             <Menu.Item icon={<MdDocumentScanner className="custom-icon" />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="/app/ocr">
               <a href="/app/ocr">ناسینەوەی وێنە</a>
             </Menu.Item>
-            <Menu.Item icon={<GiSoundWaves className="custom-icon" />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="/app/tts">
+            {/* <Menu.Item icon={<GiSoundWaves className="custom-icon" />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="/app/tts">
               <a href="/app/tts"> نووسین بۆ دەنگ</a>
-
             </Menu.Item>
             <Menu.Item icon={<AudioOutlined />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="/app/stt">
               <a href="/app/stt"> دەنگ بۆ نووسین</a>
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item icon={<RiUserSettingsLine className="custom-icon" />} className={classnames({ 'dashboard-menu-item': !sideBarCollapsed })} key="/app/profile">
 
               <a href="/app/profile">پرۆفایلەکەم</a>
