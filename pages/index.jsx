@@ -143,9 +143,9 @@ export default function Home(props) {
                   <Card
                     className="custom-box-shadow price-table"
                     bordered={false}
-                    title={<Typography.Title level={2} className="is-primary-text" style={{ textAlign: 'center' }}>٢٠ پەڕە</Typography.Title>}
+                    title={<Typography.Title level={2} className="is-primary-text" style={{ textAlign: 'center' }}>٥٠ پەڕە</Typography.Title>}
                   >
-                    <Card.Meta description="مانگانە ٢٠ پەڕە بەخۆڕایی وەردەگریت" />
+                    <Card.Meta description="مانگانە ٥٠ پەڕە بەخۆڕایی وەردەگریت" />
                     <Row gutter={[0, 10]} style={{ marginTop: 10 }}>
                       <Col span={24}>
                         <List>
@@ -153,7 +153,7 @@ export default function Home(props) {
                           <List.Item>
                             وەرگرتنی
                             {' '}
-                            <span className="is-primary-text">٢٠</span>
+                            <span className="is-primary-text">٥٠</span>
                             {' '}
                             پەڕە مانگانە
                           </List.Item>
