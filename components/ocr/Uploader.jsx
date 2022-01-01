@@ -63,8 +63,8 @@ const swapArrayLoc = (arr, from, to) => {
 };
 
 // Global Variables
-const maxFiles = 30;
-const maxFileSize = 7e+6; // 7mb
+const maxFiles = 50;
+const maxFileSize = 1.2e+7; // 12mb
 const acceptedFileTypes = [
   'image/jpg',
   'image/jpeg',
