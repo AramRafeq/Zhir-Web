@@ -80,7 +80,7 @@ export default class Profile extends React.Component {
               <Col span={24}>
                 <Form initialValues={initialFormValues} onFinish={this.onFinish} layout="vertical">
                   <Row gutter={[10, 5]}>
-                    <Col span={12}>
+                    <Col lg={12} xl={12} md={12} sm={24} xs={24}>
                       <Form.Item
                         name="name"
                         label="ناوی بەکارهێنەر"
@@ -91,7 +91,7 @@ export default class Profile extends React.Component {
                         <Input size="large" autoComplete="new" prefix={<UserOutlined className="is-icon-prefix" />} />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col lg={12} xl={12} md={12} sm={24} xs={24}>
                       <Form.Item
                         name="company_name"
                         label="شوێنی کار/کۆمپانیا"
@@ -100,7 +100,7 @@ export default class Profile extends React.Component {
                         <Input size="large" autoComplete="new" prefix={<TeamOutlined className="is-icon-prefix" />} />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col lg={12} xl={12} md={12} sm={24} xs={24}>
                       <Form.Item
                         name="email"
                         label="پۆستی ئەلیکترۆنی/ئیمەیڵ"
@@ -112,7 +112,7 @@ export default class Profile extends React.Component {
                         <Input size="large" autoComplete="new" className="is-ltr" prefix={<ContactsOutlined className="is-icon-prefix" />} />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col lg={12} xl={12} md={12} sm={24} xs={24}>
                       <Form.Item
                         name="phone_no"
                         label="ژمارەی مۆبایل"
@@ -123,7 +123,7 @@ export default class Profile extends React.Component {
                         <Input size="large" autoComplete="new" className="is-ltr" prefix={<MobileOutlined className="is-icon-prefix" />} />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col lg={12} xl={12} md={12} sm={24} xs={24}>
                       <Form.Item
                         name="password"
                         extra="تێبینی: ئەم بەشە پێویست نیە بنوسرێت تەنها لەکاتی گۆڕینی تێپەڕەوشە"
@@ -134,7 +134,7 @@ export default class Profile extends React.Component {
 
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col lg={12} xl={12} md={12} sm={24} xs={24}>
 
                       <Form.Item
                         name="password_retype"

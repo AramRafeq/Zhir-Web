@@ -31,7 +31,7 @@ class Profile extends React.Component {
           url={url}
           cardTitle="بەڕێوەبردنی زانیاری کەسی"
         >
-          <Tabs tabPosition="right" defaultActiveKey="profile">
+          {/* <Tabs tabPosition="right" defaultActiveKey="profile">
             <Tabs.TabPane
               tab={(
                 <span>
@@ -40,10 +40,9 @@ class Profile extends React.Component {
                 </span>
             )}
               key="profile"
-            >
-              <ProfileForm user={user} />
-            </Tabs.TabPane>
-          </Tabs>
+            />
+          </Tabs> */}
+          <ProfileForm user={user} />
         </Layout>
       </>
     );
