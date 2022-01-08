@@ -29,7 +29,10 @@ export default class Register extends React.Component {
     this.onFinish = (values) => {
       this.setState({ loading: true });
       superagent.post('/api/auth/register')
-        .send(values).end((err) => {
+        .send({
+          ...values,
+          company_name: values.company_name ? values.company_name : '---'
+        }).end((err) => {
           this.setState({ loading: false });
 
           if (!err) {
