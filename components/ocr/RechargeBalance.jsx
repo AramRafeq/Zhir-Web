@@ -92,7 +92,6 @@ export default function Balance() {
             />
 
           </Col>
-
         </Row>
       </Modal>
       <Row gutter={[15, 15]} style={{ padding: 20 }}>
@@ -156,7 +155,8 @@ export default function Balance() {
                 </List>
               </Col>
               <Col span={24}>
-                <Button onClick={() => showFastpayBarcode(2)} size="large" type="dashed" block>
+                {/*  onClick={() => showFastpayBarcode(2)} */}
+                <Button href="/api/user/balance/fastpay/recharge?amount=8000" target="_blank" size="large" type="dashed" block>
                   <img src="/assets/fastpay.png" width="50" alt="" />
                 </Button>
               </Col>
@@ -178,7 +178,7 @@ export default function Balance() {
                 </List>
               </Col>
               <Col span={24}>
-                <Button onClick={() => showFastpayBarcode(3)} size="large" type="dashed" block>
+                <Button href="/api/user/balance/fastpay/recharge?amount=30000" target="_blank" size="large" type="dashed" block>
                   <img src="/assets/fastpay.png" width="50" alt="" />
                 </Button>
               </Col>
@@ -200,7 +200,7 @@ export default function Balance() {
                 </List>
               </Col>
               <Col span={24}>
-                <Button onClick={() => showFastpayBarcode(4)} size="large" type="dashed" block>
+                <Button href="/api/user/balance/fastpay/recharge?amount=50000" target="_blank" size="large" type="dashed" block>
                   <img src="/assets/fastpay.png" width="50" alt="" />
                 </Button>
               </Col>

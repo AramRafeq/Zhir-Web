@@ -13,24 +13,7 @@ export default class MyDocument extends Document {
           <meta content="ژیر | خزمەتگوزاری دەرهێنانی دەقەکان" name="title" />
           <meta content="ژیر خزمەتگوزارییەکی سەرهێڵی OCR ـە، واتە بەکاردێ بۆ دەرهێنانی نووسین (دەق) لە ناو وێنە، بۆ نموونە دۆکیومێنتێکی پرینتکراوت هەیە دەتەوێ تایپی بکەی، دەتوانی دۆکیومێنتەکە سکان بکەی یانیش بە مۆبایل وێنەی پەڕەکانی بگری و ئەپڵۆدی بکەی و ژیر بۆت دەکاتە فایلی MS WORD و PDF" name="description" />
           <meta content="ocr,kurdish ocr,sorani ocr, ckb ocr,zhir,وێنە بۆ نووسین, AI, AI company, AI 2021, camscaner kurdish" name="keywords" />
-          {/* Global Site Tag (gtag.js) - Google Analytics */}
-          <script
-            async
-            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
-          />
-          <script
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{
-              __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
-              page_path: window.location.pathname,
-            });
-          `,
-            }}
-          />
+
           <script
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{

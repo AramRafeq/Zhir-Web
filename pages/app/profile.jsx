@@ -1,7 +1,5 @@
 import React from 'react';
 import { withIronSession } from 'next-iron-session';
-import { AiFillProfile } from 'react-icons/ai';
-import { Tabs } from 'antd';
 import Head from 'next/head';
 import authGuard from '../../helpers/authGuard';
 import Layout from '../../components/layout/Dashboard';
@@ -15,11 +13,6 @@ class Profile extends React.Component {
   }
 
   render() {
-    const TabIconStyle = {
-      fontSize: 15,
-      marginLeft: 5,
-      marginBottom: -5,
-    };
     const { url, user } = this.props;
     return (
       <>

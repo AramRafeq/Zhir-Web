@@ -8,6 +8,7 @@ import {
   Card,
   List,
   Tag,
+  Alert,
 } from 'antd';
 import Head from 'next/head';
 import { FaFacebookF, FaTwitter } from 'react-icons/fa';
@@ -15,13 +16,18 @@ import { HomeOutlined, DashboardOutlined } from '@ant-design/icons';
 import { MdOutlineLogout, MdOutlineLogin } from 'react-icons/md';
 
 export default function Home(props) {
-  const { user } = props;
+  const {
+    user,
+    rechargeStatus,
+    cashoutStatus,
+  } = props;
   const isLogedIn = !!user;
 
   const homeRef = React.createRef();
   const whyZhirRef = React.createRef();
   const pricingRef = React.createRef();
   const contactUsRef = React.createRef();
+
   const scroll = (ref) => {
     ref.current.scrollIntoView({ behavior: 'smooth' });
   };
@@ -29,8 +35,8 @@ export default function Home(props) {
     <>
       <Head>
         <title>ژیر | خزمەتگوزاری دەرهێنانی دەقەکان</title>
-
       </Head>
+
       <Layout className="landing-main-wraper">
         <Layout.Header>
           <Row gutter={[10, 10]}>
@@ -74,6 +80,42 @@ export default function Home(props) {
         </Layout.Header>
         <Layout.Content className="lainding-content" style={{ padding: '4rem', paddingTop: '8rem' }}>
           <Row gutter={[10, 30]} ref={homeRef}>
+            {
+              rechargeStatus === 'fail'
+                ? (
+                  <Col span={24}>
+                    <Alert
+                      closable
+                      type="error"
+                      showIcon
+                      message={(
+                        <Typography.Text>
+                          پڕکردنەوەی باڵانس سەرکەوتوو نەبوو
+                        </Typography.Text>
+                        )}
+                    />
+                  </Col>
+                )
+                : null
+            }
+            {
+              rechargeStatus && rechargeStatus !== 'fail'
+                ? (
+                  <Col span={24}>
+                    <Alert
+                      closable
+                      type="success"
+                      showIcon
+                      message={(
+                        <Typography.Text>
+                          باڵانس بە سەرکەتووی پڕکرایەوە
+                        </Typography.Text>
+                        )}
+                    />
+                  </Col>
+                )
+                : null
+            }
             <Col md={12} sm={24}>
               <Typography.Title>خــزمـەتــگــوزاری ژیـــر</Typography.Title>
               <Typography.Paragraph style={{ fontSize: 18 }}>
@@ -297,10 +339,14 @@ export default function Home(props) {
   );
 }
 
-export const getServerSideProps = withIronSession(async ({ req }) => {
+export const getServerSideProps = withIronSession(async ({ req, query }) => {
   const userObject = req.session.get('user');
   return {
-    props: { user: userObject || null },
+    props: {
+      user: userObject || null,
+      rechargeStatus: query['recharge-status'] || null,
+    },
+
   };
 },
 {

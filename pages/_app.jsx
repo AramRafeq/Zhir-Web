@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { ConfigProvider } from 'antd';
+import Script from 'next/script';
 import * as ga from '../lib/ga';
 
 import '../styles/vazir.css';
@@ -25,9 +26,25 @@ function MyApp({ Component, pageProps }) {
   }, [router.events]);
 
   return (
-    <ConfigProvider direction="rtl">
-      <Component {...pageProps} />
-    </ConfigProvider>
+    <>
+      <Script
+        strategy="lazyOnload"
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
+      />
+      <Script id="ga-analytics">
+        {
+          `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}');
+          `
+        }
+      </Script>
+      <ConfigProvider direction="rtl">
+        <Component {...pageProps} />
+      </ConfigProvider>
+    </>
   );
 }
 
