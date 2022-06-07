@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { withIronSession } from 'next-iron-session';
-import { Tabs } from 'antd';
+import { Tabs, Modal } from 'antd';
 import { MdDocumentScanner, MdAttachMoney } from 'react-icons/md';
 import { AiFillApi, AiFillQuestionCircle } from 'react-icons/ai';
 import { GoBook } from 'react-icons/go';
@@ -14,11 +14,38 @@ import Faq from '../../../components/ocr/Faq.jsx';
 import Guideline from '../../../components/ocr/Guideline';
 import Balance from '../../../components/ocr/Balance';
 
+const PepuModal = () => {
+  Modal.info({
+    title: 'ئەپلیکەیشنی پەپوو هاوڕێی خوێندنت',
+    okText: 'دابخە',
+    width: '70%',
+    content: (
+      <div>
+        <h3 style={{ textAlign: 'right' }}>
+          پەپوو پلاتفۆڕمێکی پەروەردەیی نوێیە ئامانج تێیدا یارمەتیدانی
+          قوتابیانە بۆ تێگەیشتنی باشتر و بەدەستهێنانی نمرەی بەرزتر.
+          &nbsp;
+          <b>
+            <a href="http://onelink.to/hv2tk3">دابەزاندنی ئەپلیکەیشنی پەپوو</a>
+          </b>
+        </h3>
+        <a href="http://onelink.to/hv2tk3">
+          <img width="100%" alt="ئەپلیکەیشنی پەپوو داببەزێنە" src="https://ewr1.vultrobjects.com/pepu/images/main-slides/s1.png" />
+        </a>
+      </div>
+    ),
+    onOk() {},
+  });
+};
 class OCRIndex extends React.Component {
   constructor() {
     super();
     this.state = {
     };
+  }
+
+  componentDidMount() {
+    PepuModal();
   }
 
   render() {
@@ -34,6 +61,7 @@ class OCRIndex extends React.Component {
           <title>ژیر | داشبۆردی ژیر</title>
 
           <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js" integrity="sha512-Z8CqofpIcnJN80feS2uccz+pXWgZzeKxDsDNMD/dJ6997/LSRY+W4NmEt9acwR+Gt9OHN0kkI1CTianCwoqcjQ==" crossOrigin="anonymous" />
+          <style />
         </Head>
         <Layout
           url={url}
