@@ -18,7 +18,7 @@ const PepuModal = () => {
   Modal.info({
     title: 'ئەپلیکەیشنی پەپوو هاوڕێی خوێندنت',
     okText: 'دابخە',
-    width: '70%',
+    width: '85%',
     content: (
       <div>
         <h3 style={{ textAlign: 'right' }}>
